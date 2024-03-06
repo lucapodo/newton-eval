@@ -8,8 +8,7 @@ from draco import Draco
 from draco.schema import schema_from_dataframe
 import pandas as pd
 from termcolor import colored
-from draco.fact_utils import dict_to_facts, answer_set_to_dict
-from draco.run import run_clingo
+
 import re
 
 class Newton(object):
