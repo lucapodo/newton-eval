@@ -1,0 +1,8 @@
+,HIRE_DATE,SUM(EMPLOYEE_ID)
+0,Mon,203
+1,Tue,204
+2,Wed,205
+3,Thur,384
+4,Fri,0
+5,Sat,201
+6,Sun,202

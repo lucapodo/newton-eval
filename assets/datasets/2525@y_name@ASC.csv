@@ -1,0 +1,8 @@
+,Left_office,COUNT(Left_office)
+0,Sat,0
+1,Tue,0
+2,Fri,1
+3,Mon,1
+4,Sun,1
+5,Thur,1
+6,Wed,1

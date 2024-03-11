@@ -1,0 +1,8 @@
+,Registration_Date,COUNT(Registration_Date)
+0,Mon,0
+1,Tue,0
+2,Wed,0
+3,Fri,2
+4,Sat,2
+5,Sun,2
+6,Thur,2

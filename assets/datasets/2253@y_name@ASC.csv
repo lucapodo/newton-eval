@@ -1,0 +1,11 @@
+,Name,SUM(Code)
+0,Hard drive,1
+1,Memory,2
+2,ZIP drive,3
+3,Floppy disk,4
+4,Monitor,5
+5,CD drive,7
+6,Printer,8
+7,Toner cartridge,9
+8,DVD burner,10
+9,DVD drive,17

@@ -1,0 +1,4 @@
+,job,avg(age)
+0,doctor,45.0
+1,engineer,35.0
+2,student,25.5

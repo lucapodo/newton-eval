@@ -1,0 +1,3 @@
+,bedType,COUNT(bedType)
+0,Queen,1
+1,King,3

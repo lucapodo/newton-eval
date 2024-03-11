@@ -1,0 +1,4 @@
+,AllergyType,COUNT(AllergyType)
+0,animal,2
+1,environmental,4
+2,food,4

@@ -1,0 +1,3 @@
+,DEPT_CODE,sum(T1.crs_credit)
+0,ACCT,15
+1,CIS,27

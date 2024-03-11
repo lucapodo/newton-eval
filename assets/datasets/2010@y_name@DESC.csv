@@ -1,0 +1,5 @@
+,Payment_Method_Code,COUNT(Payment_Method_Code)
+0,MasterCard,7
+1,Visa,4
+2,Discover Card,3
+3,American Express,1

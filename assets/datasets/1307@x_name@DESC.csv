@@ -1,0 +1,5 @@
+,Party,SUM(COUNT(*))
+0,Working Families,1
+1,Liberal,2
+2,Independence,1
+3,Democratic,4

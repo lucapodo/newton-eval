@@ -1,0 +1,8 @@
+,receipt_date,COUNT(receipt_date)
+0,Mon,4
+1,Tue,1
+2,Wed,2
+3,Thur,1
+4,Fri,3
+5,Sat,2
+6,Sun,2

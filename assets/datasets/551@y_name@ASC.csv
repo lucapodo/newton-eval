@@ -1,0 +1,8 @@
+,EMP_HIREDATE,COUNT(EMP_HIREDATE)
+0,Mon,0
+1,Sun,0
+2,Thur,0
+3,Tue,0
+4,Wed,0
+5,Sat,0
+6,Fri,1

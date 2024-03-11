@@ -1,0 +1,12 @@
+,billing_state,COUNT(*)
+0,AZ,7
+1,CA,21
+2,FL,7
+3,IL,7
+4,MA,7
+5,NV,7
+6,NY,7
+7,TX,7
+8,UT,7
+9,WA,7
+10,WI,7

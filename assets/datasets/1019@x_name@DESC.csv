@@ -1,0 +1,4 @@
+,premises_type,COUNT(premises_type)
+0,Warehouse,6
+1,Residence,3
+2,Office,6

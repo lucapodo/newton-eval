@@ -1,0 +1,4 @@
+,product_name,AVG(sum(T2.order_quantity))
+0,Apple,7.666666666666667
+1,gucci,7.0
+2,jcrew,10.0

@@ -1,0 +1,18 @@
+,dept_name,count(DISTINCT T2.id)
+0,Languages,119
+1,Pol. Sci.,109
+2,Comp. Sci.,108
+3,Astronomy,106
+4,Mech. Eng.,105
+5,Psychology,100
+6,Biology,100
+7,Accounting,99
+8,Elec. Eng.,98
+9,Finance,97
+10,Physics,96
+11,English,95
+12,Geology,92
+13,Athletics,92
+14,Cybernetics,86
+15,Statistics,85
+16,Marketing,85

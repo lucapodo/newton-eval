@@ -1,0 +1,5 @@
+,Payment_Method_Code,SUM(Amount_Payment)
+0,MasterCard,2531865
+1,Visa,794713
+2,Discover Card,232825
+3,American Express,177130

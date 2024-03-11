@@ -1,0 +1,7 @@
+,genre_is,min(T2.rating)
+0,blues,6
+1,folk,7
+2,modern,10
+3,nazrul,5
+4,pop,8
+5,tagore,8

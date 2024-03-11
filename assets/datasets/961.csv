@@ -1,0 +1,11 @@
+,product_name,sum(T1.product_quantity)
+0,Arts,5
+1,Beer Menus,2
+2,Chocolate,1
+3,Fans,9
+4,Hard Drive,10
+5,Harry Potter 2,8
+6,Harry Potter 3,15
+7,Harry Potter 4,3
+8,Learning English,5
+9,TV,7

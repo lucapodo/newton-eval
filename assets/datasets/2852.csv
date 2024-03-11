@@ -1,0 +1,11 @@
+,first_name,SUM(T2.total)
+0,Helena,49.62000000000001
+1,Richard,47.62000000000001
+2,Luis,46.62
+3,Ladislav,45.62
+4,Hugh,45.62
+5,Julia,43.62000000000001
+6,Frank,43.62
+7,Fynn,43.62
+8,Astrid,42.62
+9,Victor,42.62

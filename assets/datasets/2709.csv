@@ -1,0 +1,2 @@
+,count(*),sum(enrollment)
+0,1,601

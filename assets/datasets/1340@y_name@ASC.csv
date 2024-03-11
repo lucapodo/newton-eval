@@ -1,0 +1,8 @@
+,Start_from,SUM(Shop_ID)
+0,Mon,0
+1,Thur,1
+2,Wed,1
+3,Fri,2
+4,Sun,4
+5,Sat,8
+6,Tue,11

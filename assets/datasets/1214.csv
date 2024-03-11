@@ -1,0 +1,2 @@
+,count(*),sum(student_capacity)
+0,1,128

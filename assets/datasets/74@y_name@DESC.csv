@@ -1,0 +1,3 @@
+,booking_status_code,COUNT(*)
+0,Provisional,8
+1,Confirmed,7

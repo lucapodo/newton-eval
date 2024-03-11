@@ -1,0 +1,8 @@
+,date_address_to,COUNT(date_address_to)
+0,Mon,2
+1,Tue,0
+2,Wed,2
+3,Thur,1
+4,Fri,0
+5,Sat,0
+6,Sun,2

@@ -1,0 +1,11 @@
+,Name,SUM(Manufacturer)
+0,Memory,6
+1,Floppy disk,6
+2,Hard drive,5
+3,DVD drive,5
+4,ZIP drive,4
+5,Toner cartridge,3
+6,Printer,3
+7,DVD burner,2
+8,CD drive,2
+9,Monitor,1

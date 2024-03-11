@@ -1,0 +1,8 @@
+,Date_Payment_Made,COUNT(Date_Payment_Made)
+0,Fri,0
+1,Mon,0
+2,Thur,0
+3,Tue,0
+4,Sun,1
+5,Wed,1
+6,Sat,2

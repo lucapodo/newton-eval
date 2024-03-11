@@ -1,0 +1,8 @@
+,date_moved_in,COUNT(date_moved_in)
+0,Mon,0
+1,Sun,0
+2,Thur,0
+3,Wed,0
+4,Fri,1
+5,Sat,1
+6,Tue,1

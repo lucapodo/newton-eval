@@ -1,0 +1,6 @@
+,DEPT_CODE,min(stu_gpa)
+0,ENGL,2.11
+1,ACCT,2.26
+2,BIOL,2.84
+3,CIS,3.09
+4,EDU,3.87

@@ -1,0 +1,8 @@
+,Date_of_Birth,COUNT(Date_of_Birth)
+0,Sun,1
+1,Sat,1
+2,Wed,0
+3,Tue,0
+4,Thur,0
+5,Mon,0
+6,Fri,0

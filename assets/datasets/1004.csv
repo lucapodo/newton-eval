@@ -1,0 +1,3 @@
+,payment_method_code,COUNT(payment_method_code)
+0,Credit Card,7
+1,Direct Debit,8

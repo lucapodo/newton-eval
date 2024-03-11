@@ -1,0 +1,6 @@
+,date_of_enrolment,COUNT(date_of_enrolment)
+0,Nov,0
+1,Oct,0
+2,Sept,0
+3,Aug,1
+4,Dec,1

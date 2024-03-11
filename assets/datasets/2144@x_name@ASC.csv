@@ -1,0 +1,3 @@
+,Participant_Type_Code,AVG(count(*))
+0,Organizer,1.5
+1,Participant,2.0

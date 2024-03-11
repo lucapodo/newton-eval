@@ -1,0 +1,8 @@
+,date_of_completion,COUNT(date_of_completion)
+0,Sat,0
+1,Fri,1
+2,Mon,1
+3,Sun,1
+4,Tue,1
+5,Wed,1
+6,Thur,2

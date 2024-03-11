@@ -1,0 +1,12 @@
+,DEPARTMENT_NAME,COUNT(*)
+0,Shipping,45
+1,Sales,34
+2,Purchasing,6
+3,Public Relations,1
+4,Marketing,2
+5,IT,5
+6,Human Resources,1
+7,Finance,6
+8,Executive,3
+9,Administration,1
+10,Accounting,2

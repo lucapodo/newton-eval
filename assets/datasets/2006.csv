@@ -1,0 +1,8 @@
+,Date_Payment_Made,SUM(Amount_Payment)
+0,Mon,423154
+1,Tue,0
+2,Wed,579544
+3,Thur,123255
+4,Fri,418860
+5,Sat,994094
+6,Sun,1197626

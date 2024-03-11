@@ -1,0 +1,3 @@
+,SCHOOL_CODE,count(DISTINCT dept_address)
+0,A&SCI,7
+1,BUS,4

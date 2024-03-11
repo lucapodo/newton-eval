@@ -1,0 +1,4 @@
+,FIRST_NAME,SUM(SALARY)
+0,William,15700
+1,Payam,7900
+2,Adam,8200

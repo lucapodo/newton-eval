@@ -1,0 +1,8 @@
+,booking_start_date,COUNT(booking_start_date)
+0,Sat,4
+1,Mon,4
+2,Tue,2
+3,Fri,2
+4,Wed,1
+5,Thur,1
+6,Sun,1

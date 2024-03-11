@@ -1,0 +1,8 @@
+,date,SUM(cloud_cover)
+0,Wed,8
+1,Thur,8
+2,Sat,8
+3,Fri,8
+4,Tue,0
+5,Sun,0
+6,Mon,0

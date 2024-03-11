@@ -1,0 +1,5 @@
+,payment_date,COUNT(payment_date)
+0,May,5
+1,June,15
+2,Aug,47
+3,July,47

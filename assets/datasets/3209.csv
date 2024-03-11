@@ -1,0 +1,8 @@
+,Open_Date,COUNT(Open_Date)
+0,Mon,1
+1,Tue,1
+2,Wed,1
+3,Thur,0
+4,Fri,2
+5,Sat,2
+6,Sun,2

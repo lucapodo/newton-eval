@@ -1,0 +1,8 @@
+,Date_Claim_Settled,COUNT(Date_Claim_Settled)
+0,Fri,0
+1,Thur,0
+2,Tue,0
+3,Mon,1
+4,Sat,1
+5,Sun,2
+6,Wed,2

@@ -1,0 +1,4 @@
+,bedType,avg(basePrice)
+0,Double,100.0
+1,Queen,150.0
+2,King,181.25

@@ -1,0 +1,8 @@
+,HIRE_DATE,COUNT(HIRE_DATE)
+0,Mon,1
+1,Tue,1
+2,Wed,4
+3,Thur,1
+4,Fri,1
+5,Sat,3
+6,Sun,0

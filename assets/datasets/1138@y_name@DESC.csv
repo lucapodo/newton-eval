@@ -1,0 +1,3 @@
+,product_type_code,SUM(product_price)
+0,Clothes,1634
+1,Hardware,803

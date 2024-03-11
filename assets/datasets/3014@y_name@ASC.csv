@@ -1,0 +1,8 @@
+,date_of_transaction,COUNT(date_of_transaction)
+0,Sat,0
+1,Thur,0
+2,Fri,1
+3,Mon,1
+4,Tue,2
+5,Sun,3
+6,Wed,3

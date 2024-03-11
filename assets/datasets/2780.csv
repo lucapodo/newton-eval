@@ -1,0 +1,8 @@
+,birthday,COUNT(birthday)
+0,Mon,1
+1,Tue,1
+2,Wed,2
+3,Thur,0
+4,Fri,1
+5,Sat,0
+6,Sun,0

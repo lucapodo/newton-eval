@@ -1,0 +1,4 @@
+,gender,sum(student_capacity)
+0,M,116
+1,F,128
+2,X,1136

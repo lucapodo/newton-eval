@@ -1,0 +1,18 @@
+,dept_name,SUM(salary)
+0,Accounting,194865
+1,Astronomy,79070
+2,Athletics,385488
+3,Biology,122574
+4,Comp. Sci.,196266
+5,Cybernetics,385383
+6,Elec. Eng.,296649
+7,English,288354
+8,Finance,105311
+9,Geology,99382
+10,Languages,172264
+11,Marketing,336388
+12,Mech. Eng.,159625
+13,Physics,229152
+14,Pol. Sci.,300158
+15,Psychology,122285
+16,Statistics,406770

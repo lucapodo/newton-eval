@@ -1,0 +1,5 @@
+,Payment_Method_Code,AVG(Amount_Payment)
+0,Visa,198678.25
+1,MasterCard,361695.0
+2,Discover Card,77608.33333333333
+3,American Express,177130.0

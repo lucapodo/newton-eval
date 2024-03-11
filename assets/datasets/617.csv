@@ -1,0 +1,18 @@
+,dept_name,AVG(salary)
+0,Accounting,48716.25
+1,Astronomy,79070.0
+2,Athletics,77097.6
+3,Biology,61287.0
+4,Comp. Sci.,98133.0
+5,Cybernetics,96345.75
+6,Elec. Eng.,74162.25
+7,English,72088.5
+8,Finance,105311.0
+9,Geology,99382.0
+10,Languages,57421.333333333336
+11,Marketing,84097.0
+12,Mech. Eng.,79812.5
+13,Physics,114576.0
+14,Pol. Sci.,100052.66666666667
+15,Psychology,61142.5
+16,Statistics,67795.0

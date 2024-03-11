@@ -1,0 +1,16 @@
+,County,COUNT(County)
+0,Alameda,1
+1,Calaveras,1
+2,San Benito,1
+3,San Joaquin,1
+4,Santa Barbara,1
+5,Solano,1
+6,Yolo,1
+7,Amador,2
+8,Lake,2
+9,Mendocino,2
+10,Monterey,2
+11,San Luis Obispo,3
+12,Sonoma,3
+13,Napa,6
+14,N/A,7

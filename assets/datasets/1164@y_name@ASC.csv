@@ -1,0 +1,8 @@
+,date_of_treatment,COUNT(date_of_treatment)
+0,Tue,1
+1,Fri,2
+2,Mon,2
+3,Sat,2
+4,Sun,2
+5,Wed,2
+6,Thur,4

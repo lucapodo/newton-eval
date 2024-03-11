@@ -1,0 +1,4 @@
+,product_category_code,avg(product_price)
+0,Hardware,66.67
+1,Book,35.0
+2,Food,2.88

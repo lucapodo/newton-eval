@@ -1,0 +1,6 @@
+,DEPT_CODE,sum(stu_hrs)
+0,ACCT,165
+1,CIS,147
+2,EDU,120
+3,ENGL,102
+4,BIOL,42

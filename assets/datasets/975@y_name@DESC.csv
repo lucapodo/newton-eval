@@ -1,0 +1,8 @@
+,date_account_opened,COUNT(date_account_opened)
+0,Fri,2
+1,Sat,1
+2,Mon,1
+3,Wed,0
+4,Tue,0
+5,Thur,0
+6,Sun,0

@@ -1,0 +1,8 @@
+,Actual_Delivery_Date,COUNT(Actual_Delivery_Date)
+0,Tue,0
+1,Wed,1
+2,Mon,2
+3,Sat,2
+4,Sun,3
+5,Thur,3
+6,Fri,4

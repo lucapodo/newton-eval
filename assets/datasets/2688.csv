@@ -1,0 +1,8 @@
+,payment_date,COUNT(payment_date)
+0,Mon,16
+1,Tue,19
+2,Wed,15
+3,Thur,12
+4,Fri,16
+5,Sat,15
+6,Sun,21

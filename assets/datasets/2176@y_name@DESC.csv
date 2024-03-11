@@ -1,0 +1,7 @@
+,Headquarter,count(DISTINCT T1.name)
+0,Los Angeles,3
+1,Austin,3
+2,Paris,2
+3,Tokyo,1
+4,Taiwan,1
+5,Beijing,1

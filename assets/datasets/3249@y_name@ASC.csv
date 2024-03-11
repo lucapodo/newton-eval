@@ -1,0 +1,8 @@
+,Year,AVG(max(Price))
+0,Wed,0.0
+1,Fri,32.0
+2,Thur,76.5
+3,Sat,100.0
+4,Tue,130.0
+5,Sun,200.0
+6,Mon,225.0

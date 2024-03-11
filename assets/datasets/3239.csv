@@ -1,0 +1,8 @@
+,Year,COUNT(Year)
+0,Mon,1
+1,Tue,1
+2,Wed,0
+3,Thur,2
+4,Fri,1
+5,Sat,1
+6,Sun,1

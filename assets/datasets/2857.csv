@@ -1,0 +1,9 @@
+,billing_country,SUM(total)
+0,USA,523.0600000000003
+1,Canada,303.95999999999987
+2,France,195.09999999999997
+3,Brazil,190.1
+4,Germany,156.48
+5,United Kingdom,112.86
+6,Czech Republic,90.24
+7,Portugal,77.23999999999998

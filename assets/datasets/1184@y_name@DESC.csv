@@ -1,0 +1,8 @@
+,date_arrived,COUNT(date_arrived)
+0,Fri,4
+1,Tue,3
+2,Wed,2
+3,Sun,2
+4,Sat,2
+5,Thur,1
+6,Mon,1

@@ -1,0 +1,8 @@
+,date_address_from,SUM(monthly_rental)
+0,Mon,1032
+1,Tue,1297
+2,Wed,1036
+3,Thur,644
+4,Fri,1297
+5,Sat,1032
+6,Sun,1007

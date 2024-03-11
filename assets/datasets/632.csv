@@ -1,0 +1,13 @@
+,dept_name,SUM(credits)
+0,Athletics,7
+1,Biology,3
+2,Civil Eng.,7
+3,Comp. Sci.,8
+4,Cybernetics,7
+5,English,3
+6,Finance,4
+7,History,3
+8,Marketing,3
+9,Mech. Eng.,6
+10,Psychology,6
+11,Statistics,3

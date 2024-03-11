@@ -1,0 +1,8 @@
+,HIRE_DATE,SUM(DEPARTMENT_ID)
+0,Mon,930
+1,Tue,900
+2,Wed,1010
+3,Thur,860
+4,Fri,830
+5,Sat,890
+6,Sun,910

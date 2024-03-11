@@ -1,0 +1,8 @@
+,transcript_date,COUNT(transcript_date)
+0,Fri,0
+1,Sat,0
+2,Thur,0
+3,Wed,0
+4,Mon,1
+5,Tue,1
+6,Sun,2

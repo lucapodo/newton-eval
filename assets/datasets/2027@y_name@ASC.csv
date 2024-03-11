@@ -1,0 +1,3 @@
+,Date_Payment_Made,SUM(Amount_Payment)
+0,2018,7343
+1,2017,787370

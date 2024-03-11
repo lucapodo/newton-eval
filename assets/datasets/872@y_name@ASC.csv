@@ -1,0 +1,4 @@
+,payment_method_code,count(*)
+0,American E,4
+1,Visa,5
+2,MasterCard,6

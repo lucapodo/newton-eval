@@ -1,0 +1,3 @@
+,Event_Details,SUM(Event_ID)
+0,Success,83
+1,Fail,70

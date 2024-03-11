@@ -1,0 +1,5 @@
+,COUNTRY_NAME,SUM(EMPLOYEE_ID)
+0,United States of America,9891
+1,United Kingdom,203
+2,Germany,204
+3,Canada,403

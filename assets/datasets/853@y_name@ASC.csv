@@ -1,0 +1,8 @@
+,Document_Date,COUNT(Document_Date)
+0,Fri,0
+1,Mon,0
+2,Sat,0
+3,Tue,0
+4,Sun,1
+5,Thur,2
+6,Wed,2

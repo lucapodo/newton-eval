@@ -1,0 +1,8 @@
+,HIRE_DATE,SUM(MANAGER_ID)
+0,Wed,1162
+1,Sat,1144
+2,Mon,1000
+3,Fri,886
+4,Thur,606
+5,Tue,596
+6,Sun,399

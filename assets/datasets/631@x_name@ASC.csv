@@ -1,0 +1,13 @@
+,dept_name,COUNT(dept_name)
+0,Athletics,2
+1,Biology,1
+2,Civil Eng.,2
+3,Comp. Sci.,2
+4,Cybernetics,2
+5,English,1
+6,Finance,1
+7,History,1
+8,Marketing,1
+9,Mech. Eng.,2
+10,Psychology,2
+11,Statistics,1

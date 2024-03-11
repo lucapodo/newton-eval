@@ -1,0 +1,8 @@
+,Calendar_Date,COUNT(Calendar_Date)
+0,Mon,4
+1,Tue,5
+2,Wed,0
+3,Thur,1
+4,Fri,3
+5,Sat,0
+6,Sun,2

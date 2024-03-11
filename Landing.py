@@ -1,24 +1,35 @@
 import streamlit as st
 import pandas as pd
 import uuid
+from streamlit_extras.switch_page_button import switch_page 
+# st.set_page_config(layout="wide")
 
 st.set_page_config(
     page_title="Hello",
     page_icon="👋",
+    initial_sidebar_state="collapsed"
 )
 df_eval_newton_cot = pd.read_csv('evaluation-cot-large_54.csv', index_col=0)
 st.session_state.df = df_eval_newton_cot
 st.session_state.user = uuid.uuid4()
+st.session_state.start = True
 
 st.write("# Welcome to NewtonLLM evaluation task! 👋")
 
-with st.sidebar:
-    st.title('Newton webapp')
-    st.image('assets/newton.jpg', output_format='auto')
-    # username = st.text_input('Inserisci il tuo nome', '')
-    st.write('The current user is', st.session_state.user)
-    # st.session_state.username = username
-    # st.write('Instance = ', st.session_state.index)
+# with st.sidebar:
+#     st.title('Newton webapp')
+#     st.image('assets/newton.jpg', output_format='auto')
+#     # username = st.text_input('Inserisci il tuo nome', '')
+#     st.write('The current user is', st.session_state.user)
+#     # st.session_state.username = username
+#     # st.write('Instance = ', st.session_state.index)
+
+
+def navigate_to_page(page):
+    st.query_params(page=page)
+
+session_state = st.session_state
+current_page = session_state.get("page", "home")
 
 st.markdown(
     """
@@ -76,3 +87,7 @@ st.markdown("""
     > The visualization is a bar chart where the x-axis represents the 'Name' and the y-axis represents the 'Manufacturer'. There is no aggregation function applied. The data is filtered to only include prices between 60 and 120.
     > Which manufacturer has the highest number of products priced between 60 and 120?; Are there any manufacturers that do not have any products priced between 60 and 120?
     """)
+
+if st.button("Start evaluating", type="primary"):
+    switch_page("Evaluate")
+

@@ -1,0 +1,6 @@
+,product_name,AVG(count(*))
+0,book,1.0
+1,clothes,1.0
+2,food,1.666666666666666
+3,music,2.5
+4,phone,1.5

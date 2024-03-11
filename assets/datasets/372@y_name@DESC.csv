@@ -1,0 +1,15 @@
+,Operating_system,count(*)
+0,"Windows, Mac",3
+1,Windows,3
+2,"Unix (Linux, *BSD, Mac OS X, others), Windows",2
+3,"Windows, except NT and 95",1
+4,"Windows, Mac, Mobile devices",1
+5,"Windows, Mac, Linux and Mobile devices",1
+6,"Windows, Mac and Mobile devices",1
+7,"Windows, Linux, Mac OS, Symbian, WindowsMobile",1
+8,Windows (2000 onwards),1
+9,"Unix (Linux, *BSD, Mac OS X, others)",1
+10,Appliance (Linux),1
+11,Any system with Java 1.6 VM available,1
+12,Any,1
+13,"Android, Linux, Mac and Windows devices",1

@@ -1,0 +1,6 @@
+,DEPT_CODE,max(stu_gpa)
+0,EDU,3.87
+1,CIS,3.27
+2,ACCT,3.15
+3,BIOL,2.84
+4,ENGL,2.11

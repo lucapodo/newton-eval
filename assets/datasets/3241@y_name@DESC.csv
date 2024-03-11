@@ -1,0 +1,8 @@
+,Year,SUM(avg(Price))
+0,Thur,90
+1,Sun,52
+2,Sat,52
+3,Mon,49
+4,Tue,39
+5,Fri,32
+6,Wed,0

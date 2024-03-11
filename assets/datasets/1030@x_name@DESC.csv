@@ -1,0 +1,9 @@
+,customer_last_name,COUNT(customer_last_name)
+0,Wiza,1
+1,Turcotte,1
+2,Schinner,1
+3,Rath,1
+4,Lind,1
+5,Langworth,1
+6,Huels,1
+7,Effertz,2

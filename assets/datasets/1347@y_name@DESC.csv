@@ -1,0 +1,3 @@
+,Is_full_time,SUM(Employee_ID)
+0,T,19
+1,F,9

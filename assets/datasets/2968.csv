@@ -1,0 +1,6 @@
+,product_name,COUNT(product_name)
+0,book,1
+1,clothes,1
+2,food,3
+3,music,2
+4,phone,2

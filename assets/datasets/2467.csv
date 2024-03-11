@@ -1,0 +1,4 @@
+,job,COUNT(job)
+0,doctor,1
+1,engineer,1
+2,student,2

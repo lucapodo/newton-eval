@@ -1,0 +1,8 @@
+,date_incident_end,COUNT(date_incident_end)
+0,Mon,0
+1,Sat,0
+2,Wed,0
+3,Fri,1
+4,Sun,1
+5,Tue,1
+6,Thur,3

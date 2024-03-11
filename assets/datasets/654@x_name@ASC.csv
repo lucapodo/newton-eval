@@ -1,0 +1,21 @@
+,dept_name,count(*)
+0,Accounting,99
+1,Astronomy,106
+2,Athletics,92
+3,Biology,100
+4,Civil Eng.,120
+5,Comp. Sci.,108
+6,Cybernetics,86
+7,Elec. Eng.,98
+8,English,95
+9,Finance,97
+10,Geology,92
+11,History,117
+12,Languages,119
+13,Marketing,85
+14,Math,91
+15,Mech. Eng.,105
+16,Physics,96
+17,Pol. Sci.,109
+18,Psychology,100
+19,Statistics,85

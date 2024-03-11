@@ -1,0 +1,8 @@
+,Order_Date,COUNT(Order_Date)
+0,Mon,1
+1,Tue,1
+2,Wed,6
+3,Thur,1
+4,Fri,0
+5,Sat,4
+6,Sun,1

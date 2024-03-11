@@ -1,0 +1,8 @@
+,date_to,COUNT(date_to)
+0,Sat,0
+1,Sun,0
+2,Fri,1
+3,Mon,1
+4,Tue,2
+5,Wed,2
+6,Thur,3

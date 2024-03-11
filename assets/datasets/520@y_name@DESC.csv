@@ -1,0 +1,4 @@
+,STU_FNAME,SUM(STU_GPA)
+0,John,4
+1,William,2
+2,Juliette,2

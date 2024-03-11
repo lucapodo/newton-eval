@@ -1,0 +1,8 @@
+,date_of_enrolment,COUNT(date_of_enrolment)
+0,Mon,4
+1,Tue,2
+2,Wed,3
+3,Thur,5
+4,Fri,0
+5,Sat,3
+6,Sun,3

@@ -1,0 +1,8 @@
+,date_of_latest_logon,COUNT(date_of_latest_logon)
+0,Fri,0
+1,Mon,0
+2,Sun,0
+3,Thur,0
+4,Tue,0
+5,Wed,0
+6,Sat,2

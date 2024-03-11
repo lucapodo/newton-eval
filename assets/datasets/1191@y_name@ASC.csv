@@ -1,0 +1,8 @@
+,date_departed,COUNT(date_departed)
+0,Fri,0
+1,Mon,0
+2,Thur,0
+3,Tue,0
+4,Wed,0
+5,Sat,3
+6,Sun,6

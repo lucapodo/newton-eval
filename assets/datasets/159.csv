@@ -1,0 +1,8 @@
+,year,SUM(count(*))
+0,Mon,20
+1,Tue,25
+2,Wed,15
+3,Thur,20
+4,Fri,10
+5,Sat,5
+6,Sun,0

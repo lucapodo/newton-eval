@@ -1,0 +1,8 @@
+,log_entry_date,COUNT(log_entry_date)
+0,Mon,0
+1,Sat,0
+2,Thur,0
+3,Tue,0
+4,Wed,0
+5,Fri,1
+6,Sun,1

@@ -1,0 +1,4 @@
+,Work_Type,avg(t1.age)
+0,Screening,30.33333333333333
+1,Music,35.5
+2,Host,43.0

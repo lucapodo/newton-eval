@@ -1,0 +1,8 @@
+,date,COUNT(date)
+0,Sat,2
+1,Wed,1
+2,Thur,1
+3,Fri,1
+4,Tue,0
+5,Sun,0
+6,Mon,0

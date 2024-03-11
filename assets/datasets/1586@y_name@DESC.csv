@@ -1,0 +1,6 @@
+,HIRE_DATE,SUM(MANAGER_ID)
+0,Aug,4314
+1,Sept,3640
+2,July,3610
+3,June,1355
+4,Oct,205
