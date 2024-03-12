@@ -1,1 +1,2 @@
 streamlit_extras
+git+https://github.com/lucapodo/pip-newton.git
