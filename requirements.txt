@@ -1,2 +1,5 @@
 streamlit_extras
+st-supabase-connection
+altair
+altair-viewer
 git+https://github.com/lucapodo/pip-newton.git
