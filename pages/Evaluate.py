@@ -90,11 +90,32 @@ def insert_substring_before_encoding(main_string, substring):
     else:
         return main_string[:index] + substring + main_string[index:]
 
+def detect_questions(text):
+    # Regular expression to detect questions
+    pattern = r'\b[A-Z][\w\s,]+\?'
+
+    # Find all matches
+    questions = re.findall(pattern, text)
+
+    return questions
+
+def format_as_bullet_list(questions):
+    # Format questions as bullet list
+    bullet_list = '\n'.join([f'- {question}' for question in questions])
+    return bullet_list
+
+def remove_questions(text, questions):
+    # Remove detected questions from the original text
+    for question in questions:
+        text = text.replace(question, '')
+    # Remove any extra semicolons and whitespaces
+    text = text.strip('; ')
+    return text
+
 pred_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'prediction'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
 groundtruth_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'groundtruth'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
 pred_vis_gpt = json.loads(extract_text_between_backticks(df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']))#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].strip()
 pred_vis_gpt['$schema'] = "https://vega.github.io/schema/vega-lite/v5.json"
-
 
 # pred_llama_1 = json.loads(extract_text_between_backticks(df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']))#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].strip()
 # pred_llama = df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].split('Output 3. ADDITIONAL QUESTIONS')[1]
@@ -160,7 +181,8 @@ radio_captions = [
 #     return value1
     
 def col2_content():
-    st.write('## Response 2')
+    st.write('## Response 1')
+   
     
     try: 
         pred_vis_vl,_ = n.vz.to_VegaLite(pred_vis)
@@ -168,8 +190,16 @@ def col2_content():
         # st.write(df_data)
         st.vega_lite_chart(df_data, pred_vis_vl)
     except Exception:
+        st.write('Error to load')
         pass
-    st.write(pred)
+    
+    questions = detect_questions(pred)
+    # Format questions as bullet list
+    bullet_list = format_as_bullet_list(questions)
+    text_without_questions = remove_questions(pred, questions)
+    st.write(text_without_questions)
+    st.write(bullet_list)
+
     value2 =  st.radio(
         "Score the answer",
         radio_options, 
@@ -178,7 +208,7 @@ def col2_content():
     return value2
 
 def col3_content():
-    st.write('## Response 3')
+    st.write('## Response 2')
     # st.write(pred_vis_gpt)
     del pred_vis_gpt['data']
     # st.write(pred_vis_gpt)
@@ -186,7 +216,7 @@ def col3_content():
         # for i in range (len(pred_llama_vis)):
         st.vega_lite_chart(df_data,pred_vis_gpt)
     except Exception:
-        pass
+        st.write('Error to load')
     st.write(pred_gpt)
     value3 =  st.radio(
         "Score the answer",
@@ -233,7 +263,7 @@ if(st.session_state.index < 20):
             col1, col3 = columns_order
 
             with col1:
-                # v1 = col1_content()
+                # v1 = col1_contsent()
                 v1 = col2_content()
 
             # with col2:
@@ -241,6 +271,9 @@ if(st.session_state.index < 20):
 
             with col3:
                 v3 = col3_content()
+
+            col1.empty()
+            col3.empty()
 
             st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
             if(not st.session_state.start):

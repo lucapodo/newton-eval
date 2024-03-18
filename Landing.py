@@ -39,7 +39,7 @@ st.markdown(
 
     ### Task Instructions:
     1. You will be presented with an utterance and a dataset description. The total number of responses to evaluate are 20.
-    2. Along with this, you will see two responses proposed for the given utterance.
+    2. Along with this, you will see two responses proposed for the given utterance, as in the example below.
     3. Your task is to rank each response on a scale from 1 to 5 based on how human-like or natural it sounds to you.
     4. Assign a score of 1 to the response that seems the least human-like or natural to you, and a score of 5 to the response that seems the most human-like or natural.
     5. You can assign scores between 1 and 5 to both responses, ensuring each response receives a unique score.
@@ -59,15 +59,16 @@ st.markdown(
     ### User Utterance:
     """
 )
-
-st.code("""
-    Show the countries that have managers of age above 50 or below 46 , and count them by a bar chart , and show names in desc order please .
+# st.write("SISTEMARE CHE DOMANDA E RISPOSTA COICIDONO")
+st.write("""
+    :blue[Return the average price of products that have each category code .]
     """)
 st.write("""
     ### Dataset Description:   
         """)
-st.code("""
-    [('manager_id', 'numeric'), ('name', 'categorical'), ('country', 'categorical'), ('working_year_starts', 'categorical'), ('age', 'numeric'), ('level', 'numeric')]
+st.write("""
+         
+    :blue[[('product_id', 'numeric'), ('parent_product_id', 'numeric'), ('product_category_code', 'categorical'), ('date_product_first_available', 'temporal'), ('date_product_discontinued', 'temporal'), ('product_name', 'categorical'), ('product_description', 'categorical'), ('product_price', 'numeric')]]
     """)
 st.write("""
     ### Responses:
@@ -94,11 +95,15 @@ radio_captions = [
 with col1:
     st.write("""
     #### Response 1:
-    The user is interested in understanding the average price of products in each category. Therefore, the 'product_category_code' is selected as the x-axis to represent different categories, and the 'product_price' is selected as the y-axis to represent the price of the products. The'mean' aggregate function is used to calculate the average price for each category. The data is then grouped by 'product_category_code' to calculate the average price for each category.
-    This is a bar chart where the x-axis represents different product category codes and the y-axis represents the mean price of products in each category. The bars are grouped by product category code.
-    
-    Insights suggestions: Which product category has the highest average price?; Which product category has the lowest average price?; Are there any product categories that have similar average prices?
              """)
+    st.image("image_example.png", width=100)
+    st.write("""
+    The user is interested in understanding the average price of products in each category. Therefore, the 'product_category_code' is selected as the x-axis to represent different categories, and the 'product_price' is selected as the y-axis to represent the price of the products. The'mean' aggregate function is used to calculate the average price for each category. The data is then grouped by 'product_category_code' to calculate the average price for each category. This is a bar chart where the x-axis represents different product category codes and the y-axis represents the mean price of products in each category. The bars are grouped by product category code.
+
+    - Which product category has the highest average price?
+    - Which product category has the lowest average price?
+    - Are there any product categories that have similar average prices?
+    """)
     st.radio(
         "Score the answer",
         radio_options, 
@@ -108,7 +113,10 @@ with col1:
 
 with col3:
     st.write("""
-    #### Response 2:
+    #### Response 1:
+             """)
+    st.image("image_example.png", width=100)
+    st.write("""
     The visualization is a bar chart where each bar represents a product category. The height of each bar represents the average price of products in that category. This allows us to easily compare the average prices across different product categories.
 
     Other instructions to generate other data visualizations, based on the generated one, could be:
@@ -116,8 +124,7 @@ with col3:
     - Return the maximum price of products that have each category code.
     - Return the minimum price of products that have each category code.
     - Return the total number of products that have each category code.
-    - Return the average price of products that have each category code, but only for products that are still available (not discontinued)."
-
+    - Return the average price of products that have each category code, but only for products that are still available (not discontinued).
     """)
 
     st.radio(
