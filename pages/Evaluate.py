@@ -57,6 +57,18 @@ with st.sidebar:
     st.write('The current user is', st.session_state.user)
     st.write(len(df_eval_newton_cot))
 
+def extract_text_between_backticks(text):
+    pattern = r"```(.*?)```"
+    matches = re.findall(pattern, text, re.DOTALL)
+    if(len(matches)> 0):
+        res = matches[0].replace('json', '')
+        # print(res)
+        res = res.replace('vega', '')
+        # print(res)
+    else: 
+        res = None
+    return res
+
 def parse_json_garbage(s):
     s = s[next(idx for idx, c in enumerate(s) if c in "{["):]
     try:
@@ -80,15 +92,19 @@ def insert_substring_before_encoding(main_string, substring):
 
 pred_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'prediction'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
 groundtruth_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'groundtruth'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
+pred_vis_gpt = json.loads(extract_text_between_backticks(df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']))#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].strip()
+pred_vis_gpt['$schema'] = "https://vega.github.io/schema/vega-lite/v5.json"
 
-pred_llama_1 = df_eval_newton_cot.at[st.session_state.index, 'prediction_llama'].strip()
-pred_llama = df_eval_newton_cot.at[st.session_state.index, 'prediction_llama'].split('Output 3. ADDITIONAL QUESTIONS')[1]
-try:
-    pred_llama_vis = parse_json_garbage (pred_llama)
-    y = json.dumps(pred_llama_vis)
-    pred_llama_ = pred_llama.replace(pred_llama_vis, "")
-except Exception as e:
-    pred_llama_ = pred_llama
+
+# pred_llama_1 = json.loads(extract_text_between_backticks(df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']))#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].strip()
+# pred_llama = df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].split('Output 3. ADDITIONAL QUESTIONS')[1]
+
+# try:
+#     pred_llama_vis = parse_json_garbage (pred_llama)
+#     y = json.dumps(pred_llama_vis)
+#     pred_llama_ = pred_llama.replace(pred_llama_vis, "")
+# except Exception as e:
+#     pred_llama_ = pred_llama
 
 utterance = get_nl(df_eval_newton_cot.at[st.session_state.index, 'request'], pattern=r"## Request:(.+?)## Dataset:")
 dataset = get_nl(df_eval_newton_cot.at[st.session_state.index, 'request'], pattern=r"## Dataset:(.+?)## Reasoning process:").strip()
@@ -96,17 +112,25 @@ dataset = get_nl(df_eval_newton_cot.at[st.session_state.index, 'request'], patte
 groundtruth_vis = insert_substring_before_encoding(groundtruth_vis_, " data dataset ")
 pred_vis = insert_substring_before_encoding(pred_vis_, " data dataset ")
 
+
+pred_gpt = df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].split('Output 3. ADDITIONAL QUESTIONS')[1]
+pred_gpt = pred_gpt.split('Step 5:')[1]
+pred_gpt = pred_gpt.replace('Step 6:', '')
+
+
 pred = df_eval_newton_cot.at[st.session_state.index, 'prediction'].replace(f"Step 1. Vegazero visualization: {pred_vis_}", '')
 pred = get_nl(pred, pattern=r"## Response:(.+)")
 pred = pred.replace("Step 3.", "\n Step 3.")
 pred = pred.replace("Step 2.", "\n Step 2.")
 pred = pred.replace("  ", "")
+pred = pred.split('Step 2. Visualization explanation:')[1]
+pred = pred.replace('Step 3. Insights suggestions:', '')
 
-ground = df_eval_newton_cot.at[st.session_state.index, 'groundtruth'].replace(f"Step 1. Vegazero visualization: {groundtruth_vis_}", '')
-ground = get_nl(ground, pattern=r"## Response:(.+)")
-ground = ground.replace("Step 3.", "\n **Step 3.**")
-ground = ground.replace("Step 2.", "\n **Step 2.**")
-ground = ground.replace("  ", "")
+# ground = df_eval_newton_cot.at[st.session_state.index, 'groundtruth'].replace(f"Step 1. Vegazero visualization: {groundtruth_vis_}", '')
+# ground = get_nl(ground, pattern=r"## Response:(.+)")
+# ground = ground.replace("Step 3.", "\n **Step 3.**")
+# ground = ground.replace("Step 2.", "\n **Step 2.**")
+# ground = ground.replace("  ", "")
 
 radio_options = [
     "1 - Completely Meaningless",
@@ -123,22 +147,25 @@ radio_captions = [
     "Signifies utmost significance or profound relevance."
 ]
 
-def col1_content():
-    st.write('## Response 1')
-    groundtruth_vis_vl, _ = n.vz.to_VegaLite(groundtruth_vis)
-    st.vega_lite_chart(df_data, groundtruth_vis_vl)
-    st.write(ground)
-    value1 = st.radio(
-        "Score the answer",
-        radio_options,
-        captions = radio_captions,
-        key="1")
-    return value1
+# def col1_content():
+#     st.write('## Response 1')
+#     groundtruth_vis_vl, _ = n.vz.to_VegaLite(groundtruth_vis)
+#     st.vega_lite_chart(df_data, groundtruth_vis_vl)
+#     st.write(ground)
+#     value1 = st.radio(
+#         "Score the answer",
+#         radio_options,
+#         captions = radio_captions,
+#         key="1")
+#     return value1
     
 def col2_content():
     st.write('## Response 2')
+    
     try: 
         pred_vis_vl,_ = n.vz.to_VegaLite(pred_vis)
+        # st.write(pred_vis_vl)
+        # st.write(df_data)
         st.vega_lite_chart(df_data, pred_vis_vl)
     except Exception:
         pass
@@ -152,12 +179,15 @@ def col2_content():
 
 def col3_content():
     st.write('## Response 3')
+    # st.write(pred_vis_gpt)
+    del pred_vis_gpt['data']
+    # st.write(pred_vis_gpt)
     try: 
-        for i in range (len(pred_llama_vis)):
-            st.vega_lite_chart(df_data, pred_llama_vis[i])
+        # for i in range (len(pred_llama_vis)):
+        st.vega_lite_chart(df_data,pred_vis_gpt)
     except Exception:
         pass
-    st.write(pred_llama)
+    st.write(pred_gpt)
     value3 =  st.radio(
         "Score the answer",
         radio_options, 
@@ -185,25 +215,33 @@ if(st.session_state.index < 20):
         st.write('Dataset')
         st.code(dataset)
         # st.write(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip()) + '.csv')
+        # path = 'https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets/' + df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'][1].strip() + '.csv'
+        # st.write(path)
         df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
-
-        col1, col2, col3 = st.columns(3)
+        df_data = df_data.rename(columns=lambda x: x.lower())
+        # st.dataframe(df_data)
+        # pred_vis_gpt['data']['url'] = 'https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets/' + df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'
+        # st.write(pred_vis_gpt['data']['url'])
+        col1, col3 = st.columns(2)
         
         submitted = st.form_submit_button("Confirm and Next", type="primary")
         
         if submitted:
-            columns_order = [col1, col2, col3]
+            columns_order = [col1, col3]
+            # columns_order = [col1, col2, col3]
             random.shuffle(columns_order)
-            col1, col2, col3 = columns_order
+            col1, col3 = columns_order
 
             with col1:
-                v1 = col1_content()
+                # v1 = col1_content()
+                v1 = col2_content()
 
-            with col2:
-                v2 = col2_content()
+            # with col2:
+            #     v2 = col2_content()
 
             with col3:
                 v3 = col3_content()
+
             st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
             if(not st.session_state.start):
                 conn.table("evaluation").insert(
@@ -211,7 +249,7 @@ if(st.session_state.index < 20):
                     'index_vis':  df_eval_newton_cot.at[st.session_state.index,'id'], 
                     'index_nvbench': df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip(), 
                     'user': str(st.session_state.user),
-                    'score_response2': v2,
+                    'score_response2': v1,
                     'score_response3': v3
                     }], count="None"
                 ).execute()
