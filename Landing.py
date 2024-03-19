@@ -14,7 +14,10 @@ st.session_state.df = df_eval_newton_cot
 st.session_state.user = uuid.uuid4()
 st.session_state.start = True
 
-st.write("# Welcome to VRECS Turing test! 👋")
+st.write("# Welcome to V-RECS Turing test! 👋")
+left_co, cent_co,last_co = st.columns(3)
+with cent_co:
+    st.image("logo.png")
 
 # with st.sidebar:
 #     st.title('Newton webapp')
@@ -46,11 +49,11 @@ st.markdown(
     6. Your ratings will help us assess the effectiveness of various language generation models.
 
     ### Score description:
-    1 - Completely Meaningless: Indicates utter insignificance or lack of importance.
-    2 - Mostly Meaningless: Implies minimal significance or relevance.
-    3 - Beginning to Inform: Signifies the start of providing some information or significance.
-    4 - Mostly Meaningful: Suggests considerable importance or relevance.
-    5 - Completely Meaningful: Signifies utmost significance or profound relevance.
+    1. Completely Meaningless: Indicates utter insignificance or lack of importance.
+    2. Mostly Meaningless: Implies minimal significance or relevance.
+    3. Beginning to Inform: Signifies the start of providing some information or significance.
+    4. Mostly Meaningful: Suggests considerable importance or relevance.
+    5. Completely Meaningful: Signifies utmost significance or profound relevance.
 
     Thank you for your participation and dedication to improving visual communication!
 
@@ -94,7 +97,7 @@ radio_captions = [
 
 with col1:
     st.write("""
-    #### Response 1:
+    #### Response 1
              """)
     st.image("image_example.png", width=100)
     st.write("""
@@ -113,7 +116,7 @@ with col1:
 
 with col3:
     st.write("""
-    #### Response 1:
+    #### Response 2
              """)
     st.image("image_example.png", width=100)
     st.write("""
@@ -133,42 +136,6 @@ with col3:
         captions = radio_captions, 
         key="3")
 
-
-# st.markdown("""
-#     ### Poor response example
-#     **Score 1 👈**
-#     > The request is to show each nationality and the number of pilots of each nationality.
-#     > The dataset contains 5 columns:
-#     > * `pilot_id`: the id of each pilot.
-#     > * `pilot_name`: the name of each pilot.
-#     > * `rank`: the rank of each pilot.
-#     > * `age`: the age of each pilot.
-#     > * `nationality`: the nationality of each pilot.
-#     > * `position`: the position of each pilot.
-#     > * `join_year`: the year when the pilot join the team.
-#     > * `team`: the team that each pilot belong to.
-#     """)
-
-# st.markdown("""
-#     ### Medium response example
-#     **Score 2 👈**
-#     > This visualization is a bar chart with two bars. The first bar shows the distribution of job_id, the second bar shows the sum of employee_id. The chart is sorted by the y axis from low to high.
-#     > #### Insights: 
-#     > There is a job_id with 60 employees. The sum of employee_id for this job_id is 60.
-#     > #### Suggestions: 
-#     > You can try to explore the dataset with the following queries:
-#     > - Show the top 10 employees by their job_id and the sum of employee_id.
-#     > - Show the top 10 departments by their job_id and the sum of employee_id.
-#     """)
-
-# st.markdown("""
-#     ### Good response example
-#     **Score 3 👈**
-#     > Visualization explanation: 
-#     > The 'name' and'manufacturer' columns are selected because the user wants to know the distribution of products across different manufacturers. The 'price' column is used to filter the data to only include products within a certain price range. The 'code' and 'name' columns are not selected as they do not provide the information the user is looking for.
-#     > The visualization is a bar chart where the x-axis represents the 'Name' and the y-axis represents the 'Manufacturer'. There is no aggregation function applied. The data is filtered to only include prices between 60 and 120.
-#     > Which manufacturer has the highest number of products priced between 60 and 120?; Are there any manufacturers that do not have any products priced between 60 and 120?
-#     """)
 
 if st.button("Start evaluating", type="primary"):
     switch_page("Evaluate")

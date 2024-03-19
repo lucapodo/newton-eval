@@ -135,8 +135,18 @@ pred_vis = insert_substring_before_encoding(pred_vis_, " data dataset ")
 
 
 pred_gpt = df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].split('Output 3. ADDITIONAL QUESTIONS')[1]
-pred_gpt = pred_gpt.split('Step 5:')[1]
+try:
+    pred_gpt = pred_gpt.split('Step 5:')[1]
+except Exception as e:
+    try:
+        pred_gpt = pred_gpt.split('Step 5.')[1]
+    except Exception as e:
+        pred_gpt = pred_gpt.split('Step 5')[1]
+
+pred_gpt = pred_gpt.replace('Step 6.', '')
 pred_gpt = pred_gpt.replace('Step 6:', '')
+pred_gpt = pred_gpt.replace('Step 7:', '')
+pred_gpt = pred_gpt.replace('Step 7.', '')
 
 
 pred = df_eval_newton_cot.at[st.session_state.index, 'prediction'].replace(f"Step 1. Vegazero visualization: {pred_vis_}", '')
@@ -180,6 +190,13 @@ radio_captions = [
 #         key="1")
 #     return value1
     
+
+st.write('Labeled', st.session_state.index+1, 'out of 20')
+
+
+
+
+
 def col2_content():
     st.write('## Response 1')
    
