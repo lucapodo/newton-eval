@@ -155,7 +155,7 @@ pred = pred.replace("Step 3.", "\n Step 3.")
 pred = pred.replace("Step 2.", "\n Step 2.")
 pred = pred.replace("  ", "")
 pred = pred.split('Step 2. Visualization explanation:')[1]
-pred = pred.replace('Step 3. Insights suggestions:', '')
+pred = pred.replace('Step 3. Insights suggestions:', 'Other instructions to generate other data visualizations, based on the generated one, could include:')
 
 # ground = df_eval_newton_cot.at[st.session_state.index, 'groundtruth'].replace(f"Step 1. Vegazero visualization: {groundtruth_vis_}", '')
 # ground = get_nl(ground, pattern=r"## Response:(.+)")
