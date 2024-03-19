@@ -48,6 +48,8 @@ st.markdown(
     5. You can assign scores between 1 and 5 to both responses, ensuring each response receives a unique score.
     6. Your ratings will help us assess the effectiveness of various language generation models.
 
+    🚨 TO SCORE CONSIDER BOTH THE TEXT AND THE VISUALIZATION GENERATED.
+
     ### Score description:
     1. Completely Meaningless: Indicates utter insignificance or lack of importance.
     2. Mostly Meaningless: Implies minimal significance or relevance.
