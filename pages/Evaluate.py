@@ -26,7 +26,7 @@ tmp_dataset = pd.DataFrame(rows.data)
 
 answers = conn.query("*", table="evaluation" ,ttl="0").execute()
 tmp = pd.DataFrame(answers.data)
-st.info('This is a purely informational message', icon="ℹ️")
+st.info('The system will prompt you the first question twice. Don\' worry keep the same score and push again on next!', icon="ℹ️")
 
 if(len(tmp)>0):
 # Perform left join
