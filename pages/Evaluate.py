@@ -239,7 +239,7 @@ st.markdown(
 )
 
 
-if(st.session_state.index < 50):
+if(st.session_state.index < 20):
     
     with st.form("my_form"):
         
