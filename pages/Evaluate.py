@@ -44,8 +44,6 @@ else:
     df_eval_newton_cot = tmp_dataset
 
 # df_eval_newton_cot = df_eval_newton_cot.sample(frac=1).reset_index(drop=True) #DA RIATTIVARE è LO SHUFFLE
-    
-
 # df_eval_newton_cot = pd.DataFrame(rows.data)
 index = 0
 radio_index = None
