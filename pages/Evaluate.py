@@ -48,6 +48,8 @@ else:
 index = 0
 radio_index = None
 
+st.dataframe(df_eval_newton_cot)
+
 
 if 'index' not in st.session_state:
     st.session_state.index = 0
