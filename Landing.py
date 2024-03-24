@@ -2,16 +2,50 @@ import streamlit as st
 import pandas as pd
 import uuid
 from streamlit_extras.switch_page_button import switch_page 
+from st_supabase_connection import SupabaseConnection
+import numpy as np
 # st.set_page_config(layout="wide")
 st.session_state.clear()
-
 st.set_page_config(
     page_title="Hello",
     page_icon="👋",
     initial_sidebar_state="collapsed"
 )
-df_eval_newton_cot = pd.read_csv('evaluation-cot-large_54.csv', index_col=0)
+
+conn = st.connection("supabase",type=SupabaseConnection)
+
+rows = conn.query("*", table="dataset" ,ttl="0").execute()
+tmp_dataset = pd.DataFrame(rows.data)
+
+answers = conn.query("*", table="evaluation" ,ttl="0").execute()
+tmp = pd.DataFrame(answers.data)
+
+if(len(tmp)>0):
+# Perform left join
+    df_joined = tmp_dataset.merge(
+        tmp.groupby('index_vis').size().reset_index(name='num_evaluations'),
+        how='left',
+        left_on='id',
+        right_on='index_vis'
+    )
+
+    # Apply conditions
+    # df_eval_newton_cot = df_joined
+    #df_eval_newton_cot = df_joined[(df_joined['num_evaluations'] < 3) | (df_joined['num_evaluations'].isnull())]
+    df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
+    df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
+    df_eval_newton_cot.reset_index(inplace=True)
+else:
+    df_eval_newton_cot = tmp_dataset
+
+# df_eval_newton_cot = df_eval_newton_cot.sample(frac=1).reset_index(drop=True) #DA RIATTIVARE è LO SHUFFLE
+
+
 st.session_state.df = df_eval_newton_cot
+
+
+#df_eval_newton_cot = pd.read_csv('evaluation-cot-large_54.csv', index_col=0)
+#st.session_state.df = df_eval_newton_cot
 st.session_state.user = uuid.uuid4()
 st.session_state.start = True
 

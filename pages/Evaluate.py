@@ -15,40 +15,50 @@ import random
 import uuid
 
 next = False
+debug = False
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 conn = st.connection("supabase",type=SupabaseConnection)
 
 if st.button("Home", type="secondary"):
     switch_page("Landing")
 
-rows = conn.query("*", table="dataset" ,ttl="0").execute()
-tmp_dataset = pd.DataFrame(rows.data)
 
-answers = conn.query("*", table="evaluation" ,ttl="0").execute()
-tmp = pd.DataFrame(answers.data)
-st.info('The system will prompt you the first question twice. Don\' worry keep the same score and push again on next!', icon="ℹ️")
+if 'df' not in st.session_state:
+    
+    rows = conn.query("*", table="dataset" ,ttl="0").execute()
+    tmp_dataset = pd.DataFrame(rows.data)
 
-if(len(tmp)>0):
-# Perform left join
-    df_joined = tmp_dataset.merge(
-        tmp.groupby('index_vis').size().reset_index(name='num_evaluations'),
-        how='left',
-        left_on='id',
-        right_on='index_vis'
-    )
+    answers = conn.query("*", table="evaluation" ,ttl="0").execute()
+    tmp = pd.DataFrame(answers.data)
+    st.info('The system will prompt you the first question twice. Don\' worry keep the same score and push again on next!', icon="ℹ️")
 
-    # Apply conditions
-    df_eval_newton_cot = df_joined[(df_joined['num_evaluations'] < 3) | (df_joined['num_evaluations'].isnull())]
-    df_eval_newton_cot.reset_index(inplace=True)
+    if(len(tmp)>0):
+    # Perform left join
+        df_joined = tmp_dataset.merge(
+            tmp.groupby('index_vis').size().reset_index(name='num_evaluations'),
+            how='left',
+            left_on='id',
+            right_on='index_vis'
+        )
+
+        # Apply conditions
+        #df_eval_newton_cot = df_joined[(df_joined['num_evaluations'] < 3) | (df_joined['num_evaluations'].isnull())]
+        df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
+        df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
+        df_eval_newton_cot.reset_index(inplace=True)
+    else:
+        df_eval_newton_cot = tmp_dataset
+
+    # df_eval_newton_cot = df_eval_newton_cot.sample(frac=1).reset_index(drop=True) #DA RIATTIVARE è LO SHUFFLE
+    # df_eval_newton_cot = pd.DataFrame(rows.data)
+    
+    index = 0
+    radio_index = None
 else:
-    df_eval_newton_cot = tmp_dataset
+    df_eval_newton_cot = st.session_state.df
 
-# df_eval_newton_cot = df_eval_newton_cot.sample(frac=1).reset_index(drop=True) #DA RIATTIVARE è LO SHUFFLE
-# df_eval_newton_cot = pd.DataFrame(rows.data)
-index = 0
-radio_index = None
-
-# st.dataframe(df_eval_newton_cot)
+if(debug):
+    st.dataframe(df_eval_newton_cot)
 
 
 if 'index' not in st.session_state:
@@ -241,7 +251,7 @@ st.markdown(
 )
 
 
-if(st.session_state.index < 20):
+if(st.session_state.index < 21):
     
     with st.form("my_form"):
         
@@ -281,12 +291,22 @@ if(st.session_state.index < 20):
 
             # st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
             if(not st.session_state.start):
-            
-                conn.table("evaluation").insert(
+                if(not debug):
+                    conn.table("evaluation").insert(
+                        [{"score_response1": '', 
+                        'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                        'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                        'user': str(st.session_state.user),
+                        'score_response2': v1,
+                        'score_response3': v3
+                        }], count="None"
+                    ).execute()
+                else:
+                    conn.table("evaluation").insert(
                     [{"score_response1": '', 
                     'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
                     'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                    'user': str(st.session_state.user),
+                    'user': 'LUCA',
                     'score_response2': v1,
                     'score_response3': v3
                     }], count="None"
