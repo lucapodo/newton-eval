@@ -11,13 +11,13 @@ st.set_page_config(
     page_icon="👋",
     initial_sidebar_state="collapsed"
 )
-
+eval_table = "evaluation_duplicate_old"
 conn = st.connection("supabase",type=SupabaseConnection)
 
 rows = conn.query("*", table="dataset" ,ttl="0").execute()
 tmp_dataset = pd.DataFrame(rows.data)
 
-answers = conn.query("*", table="evaluation" ,ttl="0").execute()
+answers = conn.query("*", table=eval_table ,ttl="0").execute()
 tmp = pd.DataFrame(answers.data)
 
 if(len(tmp)>0):
@@ -34,6 +34,7 @@ if(len(tmp)>0):
     #df_eval_newton_cot = df_joined[(df_joined['num_evaluations'] < 3) | (df_joined['num_evaluations'].isnull())]
     df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
     df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
+    df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
     df_eval_newton_cot.reset_index(inplace=True)
 else:
     df_eval_newton_cot = tmp_dataset
@@ -173,7 +174,39 @@ with col3:
         captions = radio_captions, 
         key="3")
 
+# st.write("## Before to proceed, please fillout this form:")
+
+# text_gender = st.text_input(
+#         "Gender",
+     
+#         placeholder="Male/Female/Other",
+#     )
+
+# text_age = st.text_input(
+#         "Age",
+       
+#         placeholder="e.g., 25",
+#     )
+
+# text_experties = st.text_input(
+#         "Yopur experties",
+     
+#         placeholder="e.g., Data visualization",
+#     )
 
 if st.button("Start evaluating", type="primary"):
+
+    # st.write(text_gender)
+    # st.write(text_age)
+    # st.write(text_experties)
+
+    # conn.table("population").insert(
+    #     [{"experties": text_experties, 
+    #     'age':  text_age, 
+    #     'gender': text_gender, 
+    #     'user_id': str(st.session_state.user),
+    #     }], count="None"
+    # ).execute()
+
     switch_page("Evaluate")
 
