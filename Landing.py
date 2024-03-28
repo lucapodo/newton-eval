@@ -50,7 +50,7 @@ st.session_state.df = df_eval_newton_cot
 st.session_state.user = uuid.uuid4()
 st.session_state.start = True
 
-st.write("# Welcome to V-RECS Turing test! 👋")
+st.write("# Welcome to V-RECS evaluation test! 👋")
 left_co, cent_co,last_co = st.columns(3)
 with cent_co:
     st.image("logo.png")
@@ -97,7 +97,7 @@ st.markdown(
 
     ## Example:
 
-    ### User Utterance:
+    ### User's query:
     """
 )
 # st.write("SISTEMARE CHE DOMANDA E RISPOSTA COICIDONO")
@@ -189,16 +189,16 @@ text_age = st.text_input(
     )
 
 text_experties = st.text_input(
-        "Yopur experties",
-     
+        "Your expertise",
+
         placeholder="e.g., Data visualization",
     )
 
 if st.button("Start evaluating", type="primary"):
 
-    st.write(text_gender)
-    st.write(text_age)
-    st.write(text_experties)
+    # st.write(text_gender)
+    # st.write(text_age)
+    # st.write(text_experties)
 
     conn.table("population").insert(
         [{"experties": text_experties, 

@@ -23,7 +23,7 @@ eval_table = "evaluation_duplicate_old"
 if st.button("Home", type="secondary"):
     switch_page("Landing")
 
-st.info("The system will ask you to first visualization twise. Don't worry just confirm the evaluation already provided!")
+# st.info("The system will ask you to first visualization twise. Don't worry just confirm the evaluation already provided!")
 
 
 if 'df' not in st.session_state:
@@ -55,15 +55,16 @@ if 'df' not in st.session_state:
     radio_index = None
 else:
     df_eval_newton_cot = st.session_state.df
+    # df_eval_newton_cot = df_eval_newton_cot[df_eval_newton_cot['hardness'] == "Hard"]
+    # df_eval_newton_cot.reset_index(inplace=True)
 
-if(debug):
-    st.dataframe(df_eval_newton_cot)
+if (debug):
+    st.dataframe(df_eval_newton_cot.head(5))
 
 
 if 'index' not in st.session_state:
     st.session_state.index = 0
    
-
 if 'start' not in st.session_state:
 	st.session_state.start = True
 
@@ -74,6 +75,7 @@ with st.sidebar:
     st.title('Newton webapp')
     st.write('The current user is', st.session_state.user)
     st.write(len(df_eval_newton_cot))
+
 
 def extract_text_between_backticks(text):
     pattern = r"```(.*?)```"
@@ -191,7 +193,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
     st.write('Labeled', st.session_state.index+1, 'out of 20')
 
     def col2_content():
-        st.write('## Response')
+        st.write('## Response vrecs')
         col11, col22, col33 = st.columns(3)
         
         try: 
@@ -217,7 +219,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         return value2
 
     def col3_content():
-        st.write('## Response')
+        st.write('## Response gpt')
         # st.write(pred_vis_gpt)
         del pred_vis_gpt['data']
         # st.write(pred_vis_gpt)
@@ -264,6 +266,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
             df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
             df_data = df_data.rename(columns=lambda x: x.lower())
 
+            st.dataframe(df_data.head(5))
+
             
             col1, col3 = st.columns(2)
 
@@ -290,27 +294,27 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 col3.empty()
 
                 # st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
-                if(not st.session_state.start):
-                    if(not debug):
-                        conn.table(eval_table).insert(
-                            [{"score_response1": '', 
-                            'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
-                            'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                            'user': str(st.session_state.user),
-                            'score_response2': v1,
-                            'score_response3': v3
-                            }], count="None"
-                        ).execute()
-                    else:
-                        conn.table(eval_table).insert(
-                        [{"score_response1": '', 
-                        'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
-                        'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                        'user': 'LUCA',
-                        'score_response2': v1,
-                        'score_response3': v3
-                        }], count="None"
-                    ).execute()
+                # if(not st.session_state.start):
+                #     if(not debug):
+                #         conn.table(eval_table).insert(
+                #             [{"score_response1": '', 
+                #             'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                #             'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                #             'user': str(st.session_state.user),
+                #             'score_response2': v1,
+                #             'score_response3': v3
+                #             }], count="None"
+                #         ).execute()
+                #     else:
+                #         conn.table(eval_table).insert(
+                #         [{"score_response1": '', 
+                #         'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                #         'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                #         'user': 'LUCA',
+                #         'score_response2': v1,
+                #         'score_response3': v3
+                #         }], count="None"
+                #     ).execute()
                 st.session_state.index += 1
 
                 
