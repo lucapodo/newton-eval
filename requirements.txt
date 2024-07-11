@@ -3,4 +3,4 @@ st-supabase-connection
 altair
 altair-viewer
 git+https://github.com/lucapodo/pip-newton.git
-streamlit == 1.32.0
+streamlit == 1.32.0 --no-deps
