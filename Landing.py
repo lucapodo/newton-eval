@@ -5,25 +5,29 @@ from streamlit_extras.switch_page_button import switch_page
 from st_supabase_connection import SupabaseConnection
 import numpy as np
 # st.set_page_config(layout="wide")
+
 st.session_state.clear()
 st.set_page_config(
     page_title="Hello",
     page_icon="👋",
     initial_sidebar_state="collapsed"
 )
-eval_table = "evaluation_duplicate_old"
+
+eval_table = "evaluation"
 conn = st.connection("supabase",type=SupabaseConnection)
 
-rows = conn.query("*", table="dataset" ,ttl="0").execute()
-tmp_dataset = pd.DataFrame(rows.data)
+dataset = conn.query("*", table="dataset_new" ,ttl="0").execute()
+df_dataset = pd.DataFrame(dataset.data)
 
-answers = conn.query("*", table=eval_table ,ttl="0").execute()
-tmp = pd.DataFrame(answers.data)
+evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
+df_evaluations = pd.DataFrame(evaluations.data)
 
-if(len(tmp)>0):
+st.write(len(df_evaluations))
+
+if(len(df_evaluations)>0):
 # Perform left join
-    df_joined = tmp_dataset.merge(
-        tmp.groupby('index_vis').size().reset_index(name='num_evaluations'),
+    df_joined = df_dataset.merge(
+        df_evaluations.groupby('index_vis').size().reset_index(name='num_evaluations'),
         how='left',
         left_on='id',
         right_on='index_vis'
@@ -32,17 +36,20 @@ if(len(tmp)>0):
     # Apply conditions
     # df_eval_newton_cot = df_joined
     #df_eval_newton_cot = df_joined[(df_joined['num_evaluations'] < 3) | (df_joined['num_evaluations'].isnull())]
+
     df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
     df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
     # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
     df_eval_newton_cot.reset_index(inplace=True)
 else:
-    df_eval_newton_cot = tmp_dataset
+    df_eval_newton_cot = df_dataset
 
 # df_eval_newton_cot = df_eval_newton_cot.sample(frac=1).reset_index(drop=True) #DA RIATTIVARE è LO SHUFFLE
 
 
 st.session_state.df = df_eval_newton_cot
+
+
 
 
 #df_eval_newton_cot = pd.read_csv('evaluation-cot-large_54.csv', index_col=0)
@@ -194,17 +201,29 @@ text_experties = st.text_input(
         placeholder="e.g., Data visualization",
     )
 
+da_skills = st.slider(
+            "Score from 1(non-expert) to 5(expert) what are your skills in data analysis", 0, 5, 1
+            )
+
+
+dv_skills = st.slider(
+            "Score from 1(non-expert) to 5(expert) what are your skills in data visualization", 0, 5, 1,
+            )
+
 if st.button("Start evaluating", type="primary"):
 
     # st.write(text_gender)
     # st.write(text_age)
     # st.write(text_experties)
+    st.write(da_skills)
 
     conn.table("population").insert(
         [{"experties": text_experties, 
         'age':  text_age, 
         'gender': text_gender, 
         'user_id': str(st.session_state.user),
+        'da_skills': da_skills, 
+        'dv_skills': dv_skills, 
         }], count="None"
     ).execute()
 

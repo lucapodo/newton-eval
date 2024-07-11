@@ -13,22 +13,25 @@ import os
 n = Newton()
 import random
 import uuid
+from pages.utils import *
+from pages.style import *
 
-next = False
-debug = False
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 conn = st.connection("supabase",type=SupabaseConnection)
 
-eval_table = "evaluation_duplicate_old"
+next = False
+debug = False
+
+
+eval_table = "evaluation"
 if st.button("Home", type="secondary"):
     switch_page("Landing")
 
-# st.info("The system will ask you to first visualization twise. Don't worry just confirm the evaluation already provided!")
 
 
 if 'df' not in st.session_state:
     
-    rows = conn.query("*", table="dataset" ,ttl="0").execute()
+    rows = conn.query("*", table="dataset_new" ,ttl="0").execute()
     tmp_dataset = pd.DataFrame(rows.data)
 
     answers = conn.query("*", table=eval_table ,ttl="0").execute()
@@ -57,9 +60,8 @@ else:
     df_eval_newton_cot = st.session_state.df
     # df_eval_newton_cot = df_eval_newton_cot[df_eval_newton_cot['hardness'] == "Hard"]
     # df_eval_newton_cot.reset_index(inplace=True)
-
 if (debug):
-    st.dataframe(df_eval_newton_cot.head(5))
+    st.dataframe(df_eval_newton_cot)
 
 
 if 'index' not in st.session_state:
@@ -77,103 +79,105 @@ with st.sidebar:
     st.write(len(df_eval_newton_cot))
 
 
-def extract_text_between_backticks(text):
-    pattern = r"```(.*?)```"
-    matches = re.findall(pattern, text, re.DOTALL)
-    if(len(matches)> 0):
-        res = matches[0].replace('json', '')
-        # print(res)
-        res = res.replace('vega', '')
-        # print(res)
-    else: 
-        res = None
-    return res
+st.markdown(
+    """
+    <style>
+    .stButton>button {
+        width: 100%;
+    }
 
-def parse_json_garbage(s):
-    s = s[next(idx for idx, c in enumerate(s) if c in "{["):]
-    try:
-        return json.loads(s)
-    except json.JSONDecodeError as e:
-        return json.loads(s[:e.pos])
+    # .st-emotion-cache-0{
+    # text-align: center;}
 
-def get_nl(text, pattern):
-    try:
-        match = re.search(pattern, text, flags=re.DOTALL)
-        return match.group(1).strip()
-    except:
-        return False
 
-def insert_substring_before_encoding(main_string, substring):
-    index = main_string.find("encoding")
-    if index == -1:
-        return main_string + substring
-    else:
-        return main_string[:index] + substring + main_string[index:]
+    .stSlider{
+    padding-left: 30px;
+    padding-right: 30px;
+    }
+    p{
+    padding-left: 30px;
+    padding-right: 30px;
+    }
 
-def detect_questions(text):
-    # Regular expression to detect questions
-    pattern = r'\b[A-Z][\w\s,]+\?'
+    ul{
+    padding-left: 30px;
+    padding-right: 30px;
+    }
 
-    # Find all matches
-    questions = re.findall(pattern, text)
+    # .vega-embed {
+    # margin-left:40%}
+    </style>
 
-    return questions
+    
+    """,
+    unsafe_allow_html=True,
+)
 
-def format_as_bullet_list(questions):
-    # Format questions as bullet list
-    bullet_list = '\n'.join([f'- {question}' for question in questions])
-    return bullet_list
-
-def remove_questions(text, questions):
-    # Remove detected questions from the original text
-    for question in questions:
-        text = text.replace(question, '')
-    # Remove any extra semicolons and whitespaces
-    text = text.strip('; ')
-    return text
+def text_to_markdown_bullet_list(text):
+    # Split the text into individual instructions based on the semicolons
+    instructions = text.split(":")[1]
+    instructions = instructions.split(";")
+    
+    # Strip any leading/trailing whitespace from each instruction
+    instructions = [instruction.strip() for instruction in instructions]
+    
+    # Create the Markdown bullet list
+    markdown_list = "\n".join(f"- {instruction}" for instruction in instructions if instruction)
+    
+    return "Other instructions to generate other data visualizations, based on the generated one, could include \n" +   markdown_list
 
 if(st.session_state.index < len(df_eval_newton_cot)):
         
 
     pred_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'prediction'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
-    groundtruth_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'groundtruth'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
+    # groundtruth_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'groundtruth'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
     pred_vis_gpt = json.loads(extract_text_between_backticks(df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']))#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].strip()
     pred_vis_gpt['$schema'] = "https://vega.github.io/schema/vega-lite/v5.json"
+
 
     utterance = get_nl(df_eval_newton_cot.at[st.session_state.index, 'request'], pattern=r"## Request:(.+?)## Dataset:")
     dataset = get_nl(df_eval_newton_cot.at[st.session_state.index, 'request'], pattern=r"## Dataset:(.+?)## Reasoning process:").strip()
 
-    groundtruth_vis = insert_substring_before_encoding(groundtruth_vis_, " data dataset ")
+    # groundtruth_vis = insert_substring_before_encoding(groundtruth_vis_, " data dataset ")
     pred_vis = insert_substring_before_encoding(pred_vis_, " data dataset ")
 
     pred_gpt = df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].split('Output 3. ADDITIONAL QUESTIONS')[1]
-    try:
-        pred_gpt = pred_gpt.split('Step 5: ')[1]
-    except Exception as e:
-        try:
-            pred_gpt = pred_gpt.split('Step 5. ')[1]
-        except Exception as e:
-            pred_gpt = pred_gpt.split('Step 5 ')[1]
+    
 
-    pred_gpt = pred_gpt.replace('Step 6. ', '')
-    pred_gpt = pred_gpt.replace('Step 6.', '')
-    pred_gpt = pred_gpt.replace('Step 6: ', '')
-    pred_gpt = pred_gpt.replace('Step 6:', '')
-    pred_gpt = pred_gpt.replace('Step 7:', '')
-    pred_gpt = pred_gpt.replace('Step 7: ', '')
-    pred_gpt = pred_gpt.replace('Step 7.', '')
-    pred_gpt = pred_gpt.replace('Step 7. ', '')
-    pred_gpt = re.sub(r'\n\s+', '\n', pred_gpt)
+    caption_gpt = pred_gpt.split("Step 5")[1].split("Step 6")[0].replace(":", "").replace(".", "").strip()
+    explanation_gpt = pred_gpt.split("Step 6")[1].split("Step 7")[0].replace(":", "").replace(".", "").strip()
+    questions_gpt = pred_gpt.split("Step 7")[1].replace(":", "").replace(".", "").strip()
 
     pred = df_eval_newton_cot.at[st.session_state.index, 'prediction'].replace(f"Step 1. Vegazero visualization: {pred_vis_}", '')
-    pred = get_nl(pred, pattern=r"## Response:(.+)")
-    pred = pred.replace("Step 3.", "\n Step 3.")
-    pred = pred.replace("Step 2.", "\n Step 2.")
-    pred = pred.replace("  ", "")
-    pred = pred.split('Step 2. Visualization explanation:')[1]
-    pred = pred.replace('Step 3. Insights suggestions:', 'Other instructions to generate other data visualizations, based on the generated one, could include:')
-    pred = re.sub(r'\n\s+', '\n', pred)
 
+    pred = get_nl(pred, pattern=r"## Response:(.+)")
+
+    try:
+        caption_vrecs = "The visualization is" + pred.split("The visualization is ")[1].split('Step 3. Insights suggestions:')[0]
+    except:
+        try:
+            caption_vrecs = "The visualization represents" + pred.split("The visualization represents ")[1].split('Step 3. Insights suggestions:')[0]
+        except:
+            try:
+                caption_vrecs = "This is a" + pred.split("This is a ")[1].split('Step 3. Insights suggestions:')[0]
+            except:
+                try:
+                    caption_vrecs = "The chart is" + pred.split("The chart is ")[1].split('Step 3. Insights suggestions:')[0]
+                except:
+                    pass
+
+    try:
+        explanation_vrecs = pred.split('Step 2. Visualization explanation:')[1].split("The visualization is ")[0]
+    except:
+        try:
+            explanation_vrecs = pred.split('Step 2. Visualization explanation:')[1].split("The visualization represents ")[0]
+        except:
+            try:
+                explanation_vrecs = pred.split('Step 2. Visualization explanation:')[1].split("This is a ")[0]
+            except:
+                pass
+
+    questions_vrecs = pred.split('Step 3.')[1].replace("Insights suggestions:", 'Other instructions to generate other data visualizations, based on the generated one, could be:')
 
     radio_options = [
         "1 - Completely Meaningless",
@@ -192,134 +196,170 @@ if(st.session_state.index < len(df_eval_newton_cot)):
 
     st.write('Labeled', st.session_state.index+1, 'out of 20')
 
-    def col2_content():
-        st.write('## Response vrecs')
-        col11, col22, col33 = st.columns(3)
+    def vrecs_content():
+        st.write('## Response')
+        # col11, col22, col33 = st.columns(3)
+        _, c2, _ = st.columns((1, 1, 1))
         
         try: 
-            with col22:
+            with c2:
                 pred_vis_vl,_ = n.vz.to_VegaLite(pred_vis)
                 st.vega_lite_chart(df_data, pred_vis_vl)
         except Exception:
             st.write('Error to load')
             pass
+
+        vis_score = st.slider(
+            "Score the visualization", 0, 5, 1,
+            key="vis_score_vrecs")
+
+        caption = st.container(height=400)
+        caption.markdown('#### Caption')
+        caption.write(caption_vrecs)
+        value_caption = caption.slider(
+            "Score the caption", 0, 5, 1,
+            key="caption_vrecs")
+
+        explanation = st.container(height=400)
+        explanation.markdown('#### Explanation')
+        explanation.write(explanation_vrecs)
+        value_exaplanation = explanation.slider(
+            "Score the explanation", 0, 5, 1,
+            key="explanation_vrecs")
+
+        questions = st.container(height=400)
+        questions.markdown('#### Questions')
+        questions.write(text_to_markdown_bullet_list(questions_vrecs))
+        value_questions = questions.slider(
+            "Score the queries", 0, 5, 1,
+            key="questions_vrecs")
         
-        questions = detect_questions(pred)
-        # Format questions as bullet list
-        bullet_list = format_as_bullet_list(questions)
-        text_without_questions = remove_questions(pred, questions)
-        st.write(text_without_questions.strip(), unsafe_allow_html=True)
-        st.write(bullet_list)
+        narrarives = st.container(height=200)
+        narrarives.markdown('#### Narratives importance')
+        narrarives_importance = narrarives.slider(
+            "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
+            key="narratives_vrecs")
+        
+        return {"caption":value_caption, "explanation":value_exaplanation, "questions":value_questions, "vis_score": vis_score, "narrarives_importance": narrarives_importance}
 
-        value2 =  st.radio(
-            "Score the answer",
-            radio_options, 
-            captions = radio_captions, 
-            key="2")
-        return value2
-
-    def col3_content():
+    def gpt_content():
         st.write('## Response gpt')
-        # st.write(pred_vis_gpt)
         del pred_vis_gpt['data']
-        # st.write(pred_vis_gpt)
-        col111, col222, col333 = st.columns(3)
+        _, c2, _ = st.columns((1, 1, 1))
         try: 
-            with col222:
-                # for i in range (len(pred_llama_vis)):
+            with c2:
                 st.vega_lite_chart(df_data,pred_vis_gpt)
         except Exception:
             st.write('Error to load')
-
-        st.write(pred_gpt.strip(), unsafe_allow_html=True)
-
-        value3 =  st.radio(
-            "Score the answer",
-            radio_options, 
-            captions = radio_captions, 
-            key="3")
-        return value3
-
-    st.markdown(
-        """
-        <style>
-        .stButton>button {
-            width: 100%;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-    if(st.session_state.index < 21):
-
         
+        vis_score = st.slider(
+            "Score the visualization", 0, 5, 1,
+            key="vis_score_gpt")
+
+
+        caption = st.container(height=400)
+        caption.markdown('#### Caption')
+        caption.write(caption_gpt)
+        value_caption = caption.slider(
+            "Score the caption", 0, 5, 1,
+            key="caption_gpt")
+        
+        explanation = st.container(height=400)
+        explanation.markdown('#### Explanation')
+        explanation.write(explanation_gpt)
+        value_exaplanation = explanation.slider(
+            "Score the explanation", 0, 5, 1,
+            key="explanation_gpt")
+
+        questions = st.container(height=400)
+        questions.markdown('#### Questions')
+        questions.write(questions_gpt)
+        value_questions = questions.slider(
+            "Score the queries", 0, 5, 1,
+            key="questions_gpt")
+        
+        narrarives = st.container(height=200)
+        narrarives.markdown('#### Narratives importance')
+        narrarives_importance = narrarives.slider(
+            "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
+            key="narrarives_gpt")
+        
+        return {"caption":value_caption, "explanation":value_exaplanation, "questions":value_questions, "vis_score":vis_score, "narrarives_importance": narrarives_importance}
+
+
+    if(st.session_state.index < 50):
         
         with st.form("my_form"):
             
             st.write('User request')
             st.code(utterance)
-            st.write('Dataset')
-            st.code(dataset)
-            
-            df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
-            df_data = df_data.rename(columns=lambda x: x.lower())
 
-            st.dataframe(df_data.head(5))
-
+            st.write(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
+            st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
+            # df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
+            if(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() == "custom_1"):
+                df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets/custom_1.csv'), index_col=0,  sep=",", encoding='Latin-1')
+                df_data = df_data.rename(columns=lambda x: x.lower())
+            elif(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() =="custom_2"):
+                df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets/custom_2.csv'),  sep=";", encoding='Latin-1', on_bad_lines='skip')
+                df_data = df_data.rename(columns=lambda x: x.lower())
+            else:
+                df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets', df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'), index_col=0)
+                df_data = df_data.rename(columns=lambda x: x.lower())
             
+            st.dataframe(df_data.head(1))
+
             col1, col3 = st.columns(2)
 
             columns_order = [col1, col3]
-            # columns_order = [col1, col2, col3]
             random.shuffle(columns_order)
             col1, col3 = columns_order
 
             with col1:
-                # v1 = col1_contsent()
-                v1 = col2_content()
-
-            # with col2:
-            #     v2 = col2_content()
-
+                vres_scores = vrecs_content()
             with col3:
-                v3 = col3_content()
+                gpt_scores = gpt_content()
             
             submitted = st.form_submit_button("Confirm and Next", type="primary")
-            
             if submitted:
                 
                 col1.empty()
                 col3.empty()
 
-                # st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
-                # if(not st.session_state.start):
-                #     if(not debug):
-                #         conn.table(eval_table).insert(
-                #             [{"score_response1": '', 
-                #             'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
-                #             'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                #             'user': str(st.session_state.user),
-                #             'score_response2': v1,
-                #             'score_response3': v3
-                #             }], count="None"
-                #         ).execute()
-                #     else:
-                #         conn.table(eval_table).insert(
-                #         [{"score_response1": '', 
-                #         'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
-                #         'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                #         'user': 'LUCA',
-                #         'score_response2': v1,
-                #         'score_response3': v3
-                #         }], count="None"
-                #     ).execute()
-                st.session_state.index += 1
+                st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
 
-                
-                    
-        
+                if(not st.session_state.start):
+                    if(not debug):
+                        st.write('qua')
+                        # conn.table(eval_table).insert(
+                        #     [{
+                        #     'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                        #     'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                        #     'user': str(st.session_state.user),
+                        #     'score_caption_gpt': gpt_scores['caption'],
+                        #     'score_explanation_gpt': gpt_scores['explanation'],
+                        #     'score_questions_gpt': gpt_scores['questions'],
+                        #     'score_caption_vrecs': vres_scores['caption'],
+                        #     'score_explanation_vrecs':  vres_scores['explanation'],
+                        #     'score_questions_vrecs': vres_scores['questions'],
+                        #     'narratives_importance_gpt': gpt_scores['narrarives_importance'],
+                        #     'narratives_importance_vrecs': vres_scores['narrarives_importance'],
+                        #     'vis_score_gpt': gpt_scores['vis_score'],
+                        #     'vis_score_vrecs': vres_scores['vis_score'],
+                        #     }], count="None"
+                        # ).execute()
+                    # else:
+                    #     conn.table(eval_table).insert(
+                    #     [{"score_response1": '', 
+                    #     'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                    #     'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                    #     'user': 'LUCA',
+                    #     'score_response2': v1,
+                    #     'score_response3': v3
+                    #     }], count="None"
+                    #     ).execute()
+                        
+                st.session_state.index += 1
             
                 if(st.session_state.index>len(df_eval_newton_cot)):
                     st.session_state.index = 0

@@ -1,3 +1,0 @@
-,transaction_type,sum(transaction_amount)
-0,Payment,8743.15
-1,Refund,11192.69

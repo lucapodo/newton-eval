@@ -1,5 +1,0 @@
-,fault_status,COUNT(fault_status)
-0,Return,0
-1,Waiting,3
-2,Reported,0
-3,Fixed,3
