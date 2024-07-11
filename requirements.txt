@@ -1,6 +1,6 @@
 streamlit_extras
-st-supabase-connection
+st-supabase-connection == 1.2.2
 altair
 altair-viewer
 git+https://github.com/lucapodo/pip-newton.git
-streamlit == 1.32.0 --no-deps
+supabase == 2.4.0
