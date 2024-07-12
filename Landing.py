@@ -22,7 +22,7 @@ df_dataset = pd.DataFrame(dataset.data)
 evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
 df_evaluations = pd.DataFrame(evaluations.data)
 
-st.write(len(df_evaluations))
+# st.write(len(df_evaluations))
 
 if(len(df_evaluations)>0):
 # Perform left join
@@ -107,37 +107,37 @@ st.markdown(
     ### User's query:
     """
 )
-# st.write("SISTEMARE CHE DOMANDA E RISPOSTA COICIDONO")
 st.write("""
-    :blue[Return the average price of products that have each category code .]
+    :blue[What is the average rank of pilots in different positions?]
     """)
 st.write("""
     ### Dataset Description:   
         """)
-st.write("""
+# st.write("""
          
-    :blue[[('product_id', 'numeric'), ('parent_product_id', 'numeric'), ('product_category_code', 'categorical'), ('date_product_first_available', 'temporal'), ('date_product_discontinued', 'temporal'), ('product_name', 'categorical'), ('product_description', 'categorical'), ('product_price', 'numeric')]]
-    """)
+#     :blue[[('product_id', 'numeric'), ('parent_product_id', 'numeric'), ('product_category_code', 'categorical'), ('date_product_first_available', 'temporal'), ('date_product_discontinued', 'temporal'), ('product_name', 'categorical'), ('product_description', 'categorical'), ('product_price', 'numeric')]]
+#     """)
+st.dataframe(pd.read_csv("https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets/2586.csv").head(1))
 st.write("""
     ### Responses:
 """)
 
 
 col1, col3 = st.columns(2)
-radio_options = [
-    "1 - Completely Meaningless",
-    "2 - Mostly Meaningless",
-    "3 - Beginning to Inform",
-    "4 - Mostly Meaningful",
-    "5 - Completely Meaningful"
-]
-radio_captions = [
-    "Indicates utter insignificance or lack of importance.",
-    "Implies minimal significance or relevance.",
-    "Signifies the start of providing some information or significance.",
-    "Suggests considerable importance or relevance.",
-    "Signifies utmost significance or profound relevance."
-]
+# radio_options = [
+#     "1 - Completely Meaningless",
+#     "2 - Mostly Meaningless",
+#     "3 - Beginning to Inform",
+#     "4 - Mostly Meaningful",
+#     "5 - Completely Meaningful"
+# ]
+# radio_captions = [
+#     "Indicates utter insignificance or lack of importance.",
+#     "Implies minimal significance or relevance.",
+#     "Signifies the start of providing some information or significance.",
+#     "Suggests considerable importance or relevance.",
+#     "Signifies utmost significance or profound relevance."
+# ]
 
 
 with col1:
@@ -145,18 +145,59 @@ with col1:
     #### Response 1
              """)
     st.image("image_example.png", width=100)
-    st.write("""
-    The user is interested in understanding the average price of products in each category. Therefore, the 'product_category_code' is selected as the x-axis to represent different categories, and the 'product_price' is selected as the y-axis to represent the price of the products. The'mean' aggregate function is used to calculate the average price for each category. The data is then grouped by 'product_category_code' to calculate the average price for each category. This is a bar chart where the x-axis represents different product category codes and the y-axis represents the mean price of products in each category. The bars are grouped by product category code.
+    # st.write("""
+    # The user is interested in understanding the average price of products in each category. Therefore, the 'product_category_code' is selected as the x-axis to represent different categories, and the 'product_price' is selected as the y-axis to represent the price of the products. The'mean' aggregate function is used to calculate the average price for each category. The data is then grouped by 'product_category_code' to calculate the average price for each category. This is a bar chart where the x-axis represents different product category codes and the y-axis represents the mean price of products in each category. The bars are grouped by product category code.
 
-    - Which product category has the highest average price?
-    - Which product category has the lowest average price?
-    - Are there any product categories that have similar average prices?
-    """)
-    st.radio(
-        "Score the answer",
-        radio_options, 
-        captions = radio_captions, 
-        key="2")
+    # # - Which product category has the highest average price?
+    # # - Which product category has the lowest average price?
+    # # - Are there any product categories that have similar average prices?
+    # # """)
+    # st.radio(
+    #     "Score the answer",
+    #     radio_options, 
+    #     captions = radio_captions, 
+    #     key="2")
+    # st.write('## Response gpt')
+     
+        
+    vis_score = st.slider(
+        "Score the visualization", 0, 5, 1,
+        key="vis_score_gpt")
+
+
+    caption = st.container(height=400)
+    caption.markdown('#### Caption')
+    caption.write("""
+                    The visualization is a bar chart that shows the average rank of pilots in different positions The x-axis represents the different positions and the y-axis represents ...
+                    """)
+    value_caption = caption.slider(
+        "Score the caption", 0, 5, 1,
+        key="caption_gpt")
+    
+    explanation = st.container(height=400)
+    explanation.markdown('#### Explanation')
+    explanation.write("""
+The 'rank' and 'position' features are the best among all the others from the dataset based on the user instruction because the user wants to know the average rank of pilots in different ...""")
+    value_exaplanation = explanation.slider(
+        "Score the explanation", 0, 5, 1,
+        key="explanation_gpt")
+
+    questions = st.container(height=400)
+    questions.markdown('#### Questions')
+    questions.write("""
+                Other instructions to generate other data visualizations, based on the generated one, could be
+
+                * What is the average age of pilots in different positions?
+                    """)
+    value_questions = questions.slider(
+        "Score the queries", 0, 5, 1,
+        key="questions_gpt")
+    
+    narrarives = st.container(height=200)
+    narrarives.markdown('#### Narratives importance')
+    narrarives_importance = narrarives.slider(
+        "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
+        key="narrarives_gpt")
 
 
 with col3:
@@ -164,22 +205,49 @@ with col3:
     #### Response 2
              """)
     st.image("image_example.png", width=100)
-    st.write("""
-    The visualization is a bar chart where each bar represents a product category. The height of each bar represents the average price of products in that category. This allows us to easily compare the average prices across different product categories.
+    vis_score = st.slider(
+        "Score the visualization", 0, 5, 1,
+        )
 
-    Other instructions to generate other data visualizations, based on the generated one, could be:
 
-    - Return the maximum price of products that have each category code.
-    - Return the minimum price of products that have each category code.
-    - Return the total number of products that have each category code.
-    - Return the average price of products that have each category code, but only for products that are still available (not discontinued).
-    """)
+    caption = st.container(height=400)
+    caption.markdown('#### Caption')
+    caption.write("""
+                    The visualization is a bar chart that shows the average rank of pilots in different positions The x-axis represents the different positions and the y-axis represents ...
+                    """)
+    value_caption = caption.slider(
+        "Score the caption", 0, 5, 1,
+        )
+    
+    explanation = st.container(height=400)
+    explanation.markdown('#### Explanation')
+    explanation.write("""
+The 'rank' and 'position' features are the best among all the others from the dataset based on the user instruction because the user wants to know the average rank of pilots in different ...""")
+    value_exaplanation = explanation.slider(
+        "Score the explanation", 0, 5, 1,
+        )
 
-    st.radio(
-        "Score the answer",
-        radio_options, 
-        captions = radio_captions, 
-        key="3")
+    questions = st.container(height=400)
+    questions.markdown('#### Questions')
+    questions.write("""
+                Other instructions to generate other data visualizations, based on the generated one, could be
+
+                * What is the average age of pilots in different positions?
+                    """)
+    value_questions = questions.slider(
+        "Score the queries", 0, 5, 1,
+       )
+    
+    narrarives = st.container(height=200)
+    narrarives.markdown('#### Narratives importance')
+    narrarives_importance = narrarives.slider(
+        "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
+        )
+    # st.radio(
+    #     "Score the answer",
+    #     radio_options, 
+    #     captions = radio_captions, 
+    #     key="3")
 
 st.write("## Before to proceed, please fillout this form:")
 

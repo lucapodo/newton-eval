@@ -53,7 +53,6 @@ if 'df' not in st.session_state:
     else:
         df_eval_newton_cot = tmp_dataset
 
-
     index = 0
     radio_index = None
 else:
@@ -144,8 +143,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
     pred_gpt = df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].split('Output 3. ADDITIONAL QUESTIONS')[1]
     
 
-    caption_gpt = pred_gpt.split("Step 5")[1].split("Step 6")[0].replace(":", "").replace(".", "").strip()
-    explanation_gpt = pred_gpt.split("Step 6")[1].split("Step 7")[0].replace(":", "").replace(".", "").strip()
+    explanation_gpt  = pred_gpt.split("Step 5")[1].split("Step 6")[0].replace(":", "").replace(".", "").strip()
+    caption_gpt = pred_gpt.split("Step 6")[1].split("Step 7")[0].replace(":", "").replace(".", "").strip()
     questions_gpt = pred_gpt.split("Step 7")[1].replace(":", "").replace(".", "").strip()
 
     pred = df_eval_newton_cot.at[st.session_state.index, 'prediction'].replace(f"Step 1. Vegazero visualization: {pred_vis_}", '')
@@ -176,24 +175,9 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 explanation_vrecs = pred.split('Step 2. Visualization explanation:')[1].split("This is a ")[0]
             except:
                 pass
-
-    questions_vrecs = pred.split('Step 3.')[1].replace("Insights suggestions:", 'Other instructions to generate other data visualizations, based on the generated one, could be:')
-
-    radio_options = [
-        "1 - Completely Meaningless",
-        "2 - Mostly Meaningless",
-        "3 - Beginning to Inform",
-        "4 - Mostly Meaningful",
-        "5 - Completely Meaningful"
-    ]
-    radio_captions = [
-        "Indicates utter insignificance or lack of importance.",
-        "Implies minimal significance or relevance.",
-        "Signifies the start of providing some information or significance.",
-        "Suggests considerable importance or relevance.",
-        "Signifies utmost significance or profound relevance."
-    ]        
-
+    
+    explanation_vrecs = explanation_vrecs.split('Step 3.')[0]
+    questions_vrecs = pred.split('Step 3.')[1].replace("Insights suggestions:", 'Other instructions to generate other data visualizations, based on the generated one, could include:')
     st.write('Labeled', st.session_state.index+1, 'out of 20')
 
     def vrecs_content():
@@ -243,7 +227,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         return {"caption":value_caption, "explanation":value_exaplanation, "questions":value_questions, "vis_score": vis_score, "narrarives_importance": narrarives_importance}
 
     def gpt_content():
-        st.write('## Response gpt')
+        st.write('## Response')
         del pred_vis_gpt['data']
         _, c2, _ = st.columns((1, 1, 1))
         try: 
@@ -294,8 +278,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
             st.write('User request')
             st.code(utterance)
 
-            st.write(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
-            st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
+            # st.write(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
+            # st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
             # df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets',  df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'))
             if(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() == "custom_1"):
                 df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets/custom_1.csv'), index_col=0,  sep=",", encoding='Latin-1')
@@ -331,23 +315,23 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 if(not st.session_state.start):
                     if(not debug):
                         st.write('qua')
-                        # conn.table(eval_table).insert(
-                        #     [{
-                        #     'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
-                        #     'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                        #     'user': str(st.session_state.user),
-                        #     'score_caption_gpt': gpt_scores['caption'],
-                        #     'score_explanation_gpt': gpt_scores['explanation'],
-                        #     'score_questions_gpt': gpt_scores['questions'],
-                        #     'score_caption_vrecs': vres_scores['caption'],
-                        #     'score_explanation_vrecs':  vres_scores['explanation'],
-                        #     'score_questions_vrecs': vres_scores['questions'],
-                        #     'narratives_importance_gpt': gpt_scores['narrarives_importance'],
-                        #     'narratives_importance_vrecs': vres_scores['narrarives_importance'],
-                        #     'vis_score_gpt': gpt_scores['vis_score'],
-                        #     'vis_score_vrecs': vres_scores['vis_score'],
-                        #     }], count="None"
-                        # ).execute()
+                        conn.table(eval_table).insert(
+                            [{
+                            'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                            'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                            'user': str(st.session_state.user),
+                            'score_caption_gpt': gpt_scores['caption'],
+                            'score_explanation_gpt': gpt_scores['explanation'],
+                            'score_questions_gpt': gpt_scores['questions'],
+                            'score_caption_vrecs': vres_scores['caption'],
+                            'score_explanation_vrecs':  vres_scores['explanation'],
+                            'score_questions_vrecs': vres_scores['questions'],
+                            'narratives_importance_gpt': gpt_scores['narrarives_importance'],
+                            'narratives_importance_vrecs': vres_scores['narrarives_importance'],
+                            'vis_score_gpt': gpt_scores['vis_score'],
+                            'vis_score_vrecs': vres_scores['vis_score'],
+                            }], count="None"
+                        ).execute()
                     # else:
                     #     conn.table(eval_table).insert(
                     #     [{"score_response1": '', 
