@@ -4,6 +4,8 @@
 """
 import time
 import streamlit as st
+st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
+
 import pandas as pd
 import numpy as np
 import re
@@ -21,7 +23,7 @@ import uuid
 from pages.utils import *
 from pages.style import *
 
-st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
+
 conn = st.connection("supabase",type=SupabaseConnection)
 
 next = False
