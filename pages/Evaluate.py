@@ -1,3 +1,8 @@
+"""
+    Score -> informativeness
+    U -> usefulness
+"""
+import time
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -27,11 +32,17 @@ eval_table = "evaluation"
 if st.button("Home", type="secondary"):
     switch_page("Landing")
 
-
+js = '''
+<script>
+    var body = window.parent.document.querySelector(".main");
+    console.log(body);
+    body.scrollTop = 0;
+</script>
+'''
 
 if 'df' not in st.session_state:
     
-    rows = conn.query("*", table="dataset_new" ,ttl="0").execute()
+    rows = conn.query("*", table="dataset" ,ttl="0").execute()
     tmp_dataset = pd.DataFrame(rows.data)
 
     answers = conn.query("*", table=eval_table ,ttl="0").execute()
@@ -49,18 +60,28 @@ if 'df' not in st.session_state:
         df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
         df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
         # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
+        
+        # # df_eval_newton_cot = df_eval_newton_cot.sort_values(by='num_evaluations')
+        # df_eval_newton_cot.set_index('id_', inplace=True)
+        # df_eval_newton_cot.sort_index(inplace=True)
+        # df_eval_newton_cot.reset_index(inplace=True)
         df_eval_newton_cot.reset_index(inplace=True)
+        st.session_state.df = df_eval_newton_cot
     else:
         df_eval_newton_cot = tmp_dataset
 
     index = 0
     radio_index = None
+
 else:
     df_eval_newton_cot = st.session_state.df
-    # df_eval_newton_cot = df_eval_newton_cot[df_eval_newton_cot['hardness'] == "Hard"]
-    # df_eval_newton_cot.reset_index(inplace=True)
+# df_eval_newton_cot.set_index('id_', inplace=True)
+
 if (debug):
     st.dataframe(df_eval_newton_cot)
+
+# df_eval_newton_cot = df_eval_newton_cot.sample(frac=1)
+# st.dataframe(df_eval_newton_cot)
 
 
 if 'index' not in st.session_state:
@@ -129,17 +150,13 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         
 
     pred_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'prediction'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
-    # groundtruth_vis_ = get_nl(df_eval_newton_cot.at[st.session_state.index, 'groundtruth'], pattern=r"Step 1\. Vegazero visualization:(.+?)Step 2\.").strip()
     pred_vis_gpt = json.loads(extract_text_between_backticks(df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']))#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].strip()
     pred_vis_gpt['$schema'] = "https://vega.github.io/schema/vega-lite/v5.json"
-
 
     utterance = get_nl(df_eval_newton_cot.at[st.session_state.index, 'request'], pattern=r"## Request:(.+?)## Dataset:")
     dataset = get_nl(df_eval_newton_cot.at[st.session_state.index, 'request'], pattern=r"## Dataset:(.+?)## Reasoning process:").strip()
 
-    # groundtruth_vis = insert_substring_before_encoding(groundtruth_vis_, " data dataset ")
     pred_vis = insert_substring_before_encoding(pred_vis_, " data dataset ")
-
     pred_gpt = df_eval_newton_cot.at[st.session_state.index,'prediction_gpt']#df_eval_newton_cot.at[st.session_state.index, 'prediction_gpt'].split('Output 3. ADDITIONAL QUESTIONS')[1]
     
 
@@ -163,7 +180,10 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 try:
                     caption_vrecs = "The chart is" + pred.split("The chart is ")[1].split('Step 3. Insights suggestions:')[0]
                 except:
-                    pass
+                    try:
+                        caption_vrecs = "The bar chart is" + pred.split("The bar chart is ")[1].split('Step 3. Insights suggestions:')[0]
+                    except:
+                        pass
 
     try:
         explanation_vrecs = pred.split('Step 2. Visualization explanation:')[1].split("The visualization is ")[0]
@@ -183,46 +203,77 @@ if(st.session_state.index < len(df_eval_newton_cot)):
     def vrecs_content():
         st.write('## Response')
         # col11, col22, col33 = st.columns(3)
-        _, c2, _ = st.columns((1, 1, 1))
+        vis_container = st.container(height=500)
+        _, c2, _ = vis_container.columns((1, 1, 1))
         
         try: 
             with c2:
                 pred_vis_vl,_ = n.vz.to_VegaLite(pred_vis)
-                st.vega_lite_chart(df_data, pred_vis_vl)
+                vis_container.vega_lite_chart(df_data, pred_vis_vl)
         except Exception:
-            st.write('Error to load')
+            vis_container.write('Error to load')
             pass
 
-        vis_score = st.slider(
+        vis_score = vis_container.slider(
             "Score the visualization", 0, 5, 1,
             key="vis_score_vrecs")
         
+        
         st.divider()
 
-        caption = st.container(height=400)
+        caption = st.container(height=500)
         caption.markdown('#### Caption')
         caption.write(caption_vrecs)
+        # value_caption = caption.slider(
+        #     "Score the caption", 0, 5, 1,
+        #     key="caption_vrecs")
+        
         value_caption = caption.slider(
-            "Score the caption", 0, 5, 1,
-            key="caption_vrecs")
+            "How informative is the caption?", 0, 5, 1,
+            key="caption_vrecs"
+        )
+    
+        u_caption = caption.slider(
+            "How useful is the caption to interpret the visualization?", 0, 5, 1,
+            key="u_caption_vrecs"
+        )
         
         st.divider()
 
-        explanation = st.container(height=400)
+        explanation = st.container(height=500)
         explanation.markdown('#### Explanation')
         explanation.write(explanation_vrecs)
+        # value_exaplanation = explanation.slider(
+        #     "Score the explanation", 0, 5, 1,
+        #     key="explanation_vrecs")
         value_exaplanation = explanation.slider(
-            "Score the explanation", 0, 5, 1,
-            key="explanation_vrecs")
+            "How informative is the explanation?", 0, 5, 1,
+            key="explanation_vrecs"
+        )
+    
+        u_explanation = explanation.slider(
+            "How useful is the caption to interpret the visualization?", 0, 5, 1,
+            key="u_explanation_vrecs"
+        )
         
         st.divider()
 
-        questions = st.container(height=400)
+        questions = st.container(height=500)
         questions.markdown('#### Questions')
         questions.write(text_to_markdown_bullet_list(questions_vrecs))
+        # value_questions = questions.slider(
+        #     "Score the queries", 0, 5, 1,
+        #     key="questions_vrecs")
+
         value_questions = questions.slider(
-            "Score the queries", 0, 5, 1,
-            key="questions_vrecs")
+            "How informative are the questions?", 0, 5, 1,
+            key="questions_vrecs"
+        )
+    
+        u_questions = questions.slider(
+            "How useful are the questions to interpret the visualization?", 0, 5, 1,
+            key="u_questions_vrecs"
+        )
         
         st.divider()
         
@@ -232,49 +283,80 @@ if(st.session_state.index < len(df_eval_newton_cot)):
             "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
             key="narratives_vrecs")
         
-        return {"caption":value_caption, "explanation":value_exaplanation, "questions":value_questions, "vis_score": vis_score, "narrarives_importance": narrarives_importance}
+        return {"caption":value_caption, "explanation":value_exaplanation, "questions":value_questions, "vis_score": vis_score, "narrarives_importance": narrarives_importance,
+                "u_caption":u_caption, "u_explanation":u_explanation, "u_questions":u_questions}
 
     def gpt_content():
         st.write('## Response')
+        vis_container = st.container(height=500)
         del pred_vis_gpt['data']
-        _, c2, _ = st.columns((1, 1, 1))
+        _, c2, _ = vis_container.columns((1, 1, 1))
         try: 
             with c2:
-                st.vega_lite_chart(df_data,pred_vis_gpt)
+                vis_container.vega_lite_chart(df_data,pred_vis_gpt)
         except Exception:
-            st.write('Error to load')
+            vis_container.write('Error to load')
         
-        vis_score = st.slider(
+        vis_score = vis_container.slider(
             "Score the visualization", 0, 5, 1,
             key="vis_score_gpt")
         
         st.divider()
 
 
-        caption = st.container(height=400)
+        caption = st.container(height=500)
         caption.markdown('#### Caption')
         caption.write(caption_gpt)
+        # value_caption = caption.slider(
+        #     "Score the caption", 0, 5, 1,
+        #     key="caption_gpt")
+
         value_caption = caption.slider(
-            "Score the caption", 0, 5, 1,
-            key="caption_gpt")
+            "How informative is the caption?", 0, 5, 1,
+            key="caption_gpt"
+        )
+    
+        u_caption = caption.slider(
+            "How useful is the caption to interpret the visualization?", 0, 5, 1,
+            key="u_caption_gpt"
+        )
         
         st.divider()
         
-        explanation = st.container(height=400)
+        explanation = st.container(height=500)
         explanation.markdown('#### Explanation')
         explanation.write(explanation_gpt)
+        # value_exaplanation = explanation.slider(
+        #     "Score the explanation", 0, 5, 1,
+        #     key="explanation_gpt")
         value_exaplanation = explanation.slider(
-            "Score the explanation", 0, 5, 1,
-            key="explanation_gpt")
+            "How informative is the explanation?", 0, 5, 1,
+            key="explanation_gpt"
+        )
+    
+        u_explanation = explanation.slider(
+            "How useful is the caption to interpret the visualization?", 0, 5, 1,
+            key="u_explanation_gpt"
+        )
         
         st.divider()
 
-        questions = st.container(height=400)
+        questions = st.container(height=500)
         questions.markdown('#### Questions')
         questions.write(questions_gpt)
+        # value_questions = questions.slider(
+        #     "Score the queries", 0, 5, 1,
+        #     key="questions_gpt")
+        
         value_questions = questions.slider(
-            "Score the queries", 0, 5, 1,
-            key="questions_gpt")
+            "How informative are the questions?", 0, 5, 1,
+            key="questions_gpt"
+        )
+    
+        u_questions = questions.slider(
+            "How useful are the questions to interpret the visualization?", 0, 5, 1,
+            key="u_questions_gpt"
+        )
         
         st.divider()
         
@@ -284,10 +366,11 @@ if(st.session_state.index < len(df_eval_newton_cot)):
             "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
             key="narrarives_gpt")
         
-        return {"caption":value_caption, "explanation":value_exaplanation, "questions":value_questions, "vis_score":vis_score, "narrarives_importance": narrarives_importance}
+        return {"caption":value_caption, "explanation":value_exaplanation, "questions":value_questions, "vis_score":vis_score, "narrarives_importance": narrarives_importance,
+                "u_caption":u_caption, "u_explanation":u_explanation, "u_questions":u_questions}
 
 
-    if(st.session_state.index < 50):
+    if(st.session_state.index < 60):
         
         with st.form("my_form"):
             
@@ -326,28 +409,47 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 col1.empty()
                 col3.empty()
 
-                st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
+
+                temp = st.empty()
+                with temp:
+                    st.components.v1.html(js)
+                    time.sleep(.5) # To make sure the script can execute before being deleted
+                temp.empty()
+
+                
+
+
+                # st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
 
                 if(not st.session_state.start):
                     if(not debug):
-                        st.write('qua')
-                        # conn.table(eval_table).insert(
-                        #     [{
-                        #     'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
-                        #     'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                        #     'user': str(st.session_state.user),
-                        #     'score_caption_gpt': gpt_scores['caption'],
-                        #     'score_explanation_gpt': gpt_scores['explanation'],
-                        #     'score_questions_gpt': gpt_scores['questions'],
-                        #     'score_caption_vrecs': vres_scores['caption'],
-                        #     'score_explanation_vrecs':  vres_scores['explanation'],
-                        #     'score_questions_vrecs': vres_scores['questions'],
-                        #     'narratives_importance_gpt': gpt_scores['narrarives_importance'],
-                        #     'narratives_importance_vrecs': vres_scores['narrarives_importance'],
-                        #     'vis_score_gpt': gpt_scores['vis_score'],
-                        #     'vis_score_vrecs': vres_scores['vis_score'],
-                        #     }], count="None"
-                        # ).execute()
+                        conn.table(eval_table).insert(
+                            [{
+                            'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                            'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                            'user': str(st.session_state.user),
+                            'score_caption_gpt': gpt_scores['caption'],
+                            'score_explanation_gpt': gpt_scores['explanation'],
+                            'score_questions_gpt': gpt_scores['questions'],
+                            'score_caption_vrecs': vres_scores['caption'],
+                            'score_explanation_vrecs':  vres_scores['explanation'],
+                            'score_questions_vrecs': vres_scores['questions'],
+                            'narratives_importance_gpt': gpt_scores['narrarives_importance'],
+                            'narratives_importance_vrecs': vres_scores['narrarives_importance'],
+                            'vis_score_gpt': gpt_scores['vis_score'],
+                            'vis_score_vrecs': vres_scores['vis_score'],
+                            'u_caption_vrecs': vres_scores['u_caption'],
+                            'u_explanation_vrecs': vres_scores['u_explanation'],
+                            'u_questions_vrecs': vres_scores['u_questions'],
+                            'u_caption_gpt': gpt_scores['u_caption'],
+                            'u_explanation_gpt': gpt_scores['u_explanation'],
+                            'u_questions_gpt': gpt_scores['u_questions'],
+                            }], count="None"
+                        ).execute()
+
+                        
+                        
+
                     # else:
                     #     conn.table(eval_table).insert(
                     #     [{"score_response1": '', 
@@ -363,11 +465,9 @@ if(st.session_state.index < len(df_eval_newton_cot)):
             
                 if(st.session_state.index>len(df_eval_newton_cot)):
                     st.session_state.index = 0
-                # st.write(st.session_state.index)
                 st.session_state.start = False
                 
-                # st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
-                # st.write(st.session_state.start)
+            
     else:
         st.write("""
                 ### Thank you 👏

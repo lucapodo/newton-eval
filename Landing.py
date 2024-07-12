@@ -16,16 +16,13 @@ st.set_page_config(
 eval_table = "evaluation"
 conn = st.connection("supabase",type=SupabaseConnection)
 
-dataset = conn.query("*", table="dataset_new" ,ttl="0").execute()
+dataset = conn.query("*", table="dataset" ,ttl="0").execute()
 df_dataset = pd.DataFrame(dataset.data)
 
 evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
 df_evaluations = pd.DataFrame(evaluations.data)
 
-# st.write(len(df_evaluations))
-
 if(len(df_evaluations)>0):
-# Perform left join
     df_joined = df_dataset.merge(
         df_evaluations.groupby('index_vis').size().reset_index(name='num_evaluations'),
         how='left',
@@ -44,16 +41,14 @@ if(len(df_evaluations)>0):
 else:
     df_eval_newton_cot = df_dataset
 
-# df_eval_newton_cot = df_eval_newton_cot.sample(frac=1).reset_index(drop=True) #DA RIATTIVARE è LO SHUFFLE
 
-
+# df_eval_newton_cot.set_index('id_', inplace=True)
+# df_eval_newton_cot.sort_index(inplace=True)
+# df_eval_newton_cot.reset_index(inplace=True)
+# st.dataframe(df_eval_newton_cot)
 st.session_state.df = df_eval_newton_cot
 
 
-
-
-#df_eval_newton_cot = pd.read_csv('evaluation-cot-large_54.csv', index_col=0)
-#st.session_state.df = df_eval_newton_cot
 st.session_state.user = uuid.uuid4()
 st.session_state.start = True
 
