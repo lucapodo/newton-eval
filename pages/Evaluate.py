@@ -196,6 +196,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         vis_score = st.slider(
             "Score the visualization", 0, 5, 1,
             key="vis_score_vrecs")
+        
+        st.divider()
 
         caption = st.container(height=400)
         caption.markdown('#### Caption')
@@ -203,6 +205,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         value_caption = caption.slider(
             "Score the caption", 0, 5, 1,
             key="caption_vrecs")
+        
+        st.divider()
 
         explanation = st.container(height=400)
         explanation.markdown('#### Explanation')
@@ -210,6 +214,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         value_exaplanation = explanation.slider(
             "Score the explanation", 0, 5, 1,
             key="explanation_vrecs")
+        
+        st.divider()
 
         questions = st.container(height=400)
         questions.markdown('#### Questions')
@@ -217,6 +223,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         value_questions = questions.slider(
             "Score the queries", 0, 5, 1,
             key="questions_vrecs")
+        
+        st.divider()
         
         narrarives = st.container(height=200)
         narrarives.markdown('#### Narratives importance')
@@ -239,6 +247,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         vis_score = st.slider(
             "Score the visualization", 0, 5, 1,
             key="vis_score_gpt")
+        
+        st.divider()
 
 
         caption = st.container(height=400)
@@ -248,12 +258,16 @@ if(st.session_state.index < len(df_eval_newton_cot)):
             "Score the caption", 0, 5, 1,
             key="caption_gpt")
         
+        st.divider()
+        
         explanation = st.container(height=400)
         explanation.markdown('#### Explanation')
         explanation.write(explanation_gpt)
         value_exaplanation = explanation.slider(
             "Score the explanation", 0, 5, 1,
             key="explanation_gpt")
+        
+        st.divider()
 
         questions = st.container(height=400)
         questions.markdown('#### Questions')
@@ -261,6 +275,8 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         value_questions = questions.slider(
             "Score the queries", 0, 5, 1,
             key="questions_gpt")
+        
+        st.divider()
         
         narrarives = st.container(height=200)
         narrarives.markdown('#### Narratives importance')
@@ -315,23 +331,23 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 if(not st.session_state.start):
                     if(not debug):
                         st.write('qua')
-                        conn.table(eval_table).insert(
-                            [{
-                            'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
-                            'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
-                            'user': str(st.session_state.user),
-                            'score_caption_gpt': gpt_scores['caption'],
-                            'score_explanation_gpt': gpt_scores['explanation'],
-                            'score_questions_gpt': gpt_scores['questions'],
-                            'score_caption_vrecs': vres_scores['caption'],
-                            'score_explanation_vrecs':  vres_scores['explanation'],
-                            'score_questions_vrecs': vres_scores['questions'],
-                            'narratives_importance_gpt': gpt_scores['narrarives_importance'],
-                            'narratives_importance_vrecs': vres_scores['narrarives_importance'],
-                            'vis_score_gpt': gpt_scores['vis_score'],
-                            'vis_score_vrecs': vres_scores['vis_score'],
-                            }], count="None"
-                        ).execute()
+                        # conn.table(eval_table).insert(
+                        #     [{
+                        #     'index_vis':  df_eval_newton_cot.at[st.session_state.index -1,'id'], 
+                        #     'index_nvbench': df_eval_newton_cot.at[st.session_state.index -1, 'nvBench_id'].strip(), 
+                        #     'user': str(st.session_state.user),
+                        #     'score_caption_gpt': gpt_scores['caption'],
+                        #     'score_explanation_gpt': gpt_scores['explanation'],
+                        #     'score_questions_gpt': gpt_scores['questions'],
+                        #     'score_caption_vrecs': vres_scores['caption'],
+                        #     'score_explanation_vrecs':  vres_scores['explanation'],
+                        #     'score_questions_vrecs': vres_scores['questions'],
+                        #     'narratives_importance_gpt': gpt_scores['narrarives_importance'],
+                        #     'narratives_importance_vrecs': vres_scores['narrarives_importance'],
+                        #     'vis_score_gpt': gpt_scores['vis_score'],
+                        #     'vis_score_vrecs': vres_scores['vis_score'],
+                        #     }], count="None"
+                        # ).execute()
                     # else:
                     #     conn.table(eval_table).insert(
                     #     [{"score_response1": '', 

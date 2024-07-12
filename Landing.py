@@ -84,21 +84,24 @@ st.markdown(
     Welcome! Your valuable feedback on VRECS responses is crucial for enhancing its effectiveness. Below are the steps to follow:
 
     ### Task Instructions:
-    1. You will be presented with an utterance and a dataset description. The total number of responses to evaluate are 20.
-    2. Along with this, you will see two responses proposed for the given utterance, as in the example below.
-    3. Your task is to rank each response on a scale from 1 to 5 based on how human-like or natural it sounds to you.
-    4. Assign a score of 1 to the response that seems the least human-like or natural to you, and a score of 5 to the response that seems the most human-like or natural.
-    5. You can assign scores between 1 and 5 to both responses, ensuring each response receives a unique score.
-    6. Your ratings will help us assess the effectiveness of various language generation models.
+    
+    1. You will evaluate 20 responses, each consisting of an utterance and a dataset description.
+    2. For each utterance, you will see two proposed responses.
+    3. Each response includes four parts: the visualization, the explanation (E), the caption (C), and the suggested questions (S).
+    4. Rank each response on a scale from 1 to 5 based on how human-like or natural it sounds.
+    5. E, C, and S have two scores:
+        - **Informativeness**: How well the text conveys the semantic meaning related to the visualization.
+        - **Usefulness**: How helpful the text is in interpreting the visualization.
+    6. Finally, you have to provide an overall score of the informativenss of E,C,S
 
     🚨 TO SCORE CONSIDER BOTH THE TEXT AND THE VISUALIZATION GENERATED.
 
     ### Score description:
-    1. Completely Meaningless: Indicates utter insignificance or lack of importance.
-    2. Mostly Meaningless: Implies minimal significance or relevance.
-    3. Beginning to Inform: Signifies the start of providing some information or significance.
-    4. Mostly Meaningful: Suggests considerable importance or relevance.
-    5. Completely Meaningful: Signifies utmost significance or profound relevance.
+    * 1: Completely Meaningless: Indicates utter insignificance or lack of importance.
+    * 2: Mostly Meaningless: Implies minimal significance or relevance.
+    * 3: Beginning to Inform: Signifies the start of providing some information or significance.
+    * 4: Mostly Meaningful: Suggests considerable importance or relevance.
+    * 5: Completely Meaningful: Signifies utmost significance or profound relevance.
 
     Thank you for your participation and dedication to improving visual communication!
 
@@ -142,27 +145,14 @@ col1, col3 = st.columns(2)
 
 with col1:
     st.write("""
-    #### Response 1
+    #### Response
              """)
     st.image("image_example.png", width=100)
-    # st.write("""
-    # The user is interested in understanding the average price of products in each category. Therefore, the 'product_category_code' is selected as the x-axis to represent different categories, and the 'product_price' is selected as the y-axis to represent the price of the products. The'mean' aggregate function is used to calculate the average price for each category. The data is then grouped by 'product_category_code' to calculate the average price for each category. This is a bar chart where the x-axis represents different product category codes and the y-axis represents the mean price of products in each category. The bars are grouped by product category code.
 
-    # # - Which product category has the highest average price?
-    # # - Which product category has the lowest average price?
-    # # - Are there any product categories that have similar average prices?
-    # # """)
-    # st.radio(
-    #     "Score the answer",
-    #     radio_options, 
-    #     captions = radio_captions, 
-    #     key="2")
-    # st.write('## Response gpt')
      
         
     vis_score = st.slider(
-        "Score the visualization", 0, 5, 1,
-        key="vis_score_gpt")
+        "Score the visualization", 0, 5, 1)
 
 
     caption = st.container(height=400)
@@ -171,43 +161,56 @@ with col1:
                     The visualization is a bar chart that shows the average rank of pilots in different positions The x-axis represents the different positions and the y-axis represents ...
                     """)
     value_caption = caption.slider(
-        "Score the caption", 0, 5, 1,
-        key="caption_gpt")
+        "How informative is the caption?", 0, 5, 1,
+        )
+    
+    value_caption = caption.slider(
+        "How useful is the caption to interpret the visualization?", 0, 5, 1,
+        )
     
     explanation = st.container(height=400)
     explanation.markdown('#### Explanation')
     explanation.write("""
 The 'rank' and 'position' features are the best among all the others from the dataset based on the user instruction because the user wants to know the average rank of pilots in different ...""")
-    value_exaplanation = explanation.slider(
-        "Score the explanation", 0, 5, 1,
-        key="explanation_gpt")
+    
+    explanation.slider(
+        "How informative is the explanation?", 0, 5, 1,
+        )
+    explanation.slider(
+        "How useful is the explanation to interpret the visualization?", 0, 5, 1,
+        )
 
     questions = st.container(height=400)
     questions.markdown('#### Questions')
     questions.write("""
                 Other instructions to generate other data visualizations, based on the generated one, could be
-
                 * What is the average age of pilots in different positions?
                     """)
-    value_questions = questions.slider(
-        "Score the queries", 0, 5, 1,
-        key="questions_gpt")
+    questions.slider(
+        "How informative are the questions?", 0, 5, 1,
+        )
+    
+    questions.slider(
+        "How useful are the questions to interpret the visualization", 0, 5, 1,
+        )
     
     narrarives = st.container(height=200)
     narrarives.markdown('#### Narratives importance')
     narrarives_importance = narrarives.slider(
         "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
-        key="narrarives_gpt")
+        key="18"
+       )
 
 
 with col3:
     st.write("""
-    #### Response 2
+    #### Response
              """)
     st.image("image_example.png", width=100)
-    vis_score = st.slider(
+    
+    st.slider(
         "Score the visualization", 0, 5, 1,
-        )
+        key="11")
 
 
     caption = st.container(height=400)
@@ -216,38 +219,52 @@ with col3:
                     The visualization is a bar chart that shows the average rank of pilots in different positions The x-axis represents the different positions and the y-axis represents ...
                     """)
     value_caption = caption.slider(
-        "Score the caption", 0, 5, 1,
+        "How informative is the caption?", 0, 5, 1,
+        key="12"
+        )
+    
+    value_caption = caption.slider(
+        "How useful is the caption to interpret the visualization?", 0, 5, 1,
+        key="13"
         )
     
     explanation = st.container(height=400)
     explanation.markdown('#### Explanation')
     explanation.write("""
-The 'rank' and 'position' features are the best among all the others from the dataset based on the user instruction because the user wants to know the average rank of pilots in different ...""")
-    value_exaplanation = explanation.slider(
-        "Score the explanation", 0, 5, 1,
+        The 'rank' and 'position' features are the best among all the others from the dataset based on the user instruction because the user wants to know the average rank of pilots in different ...""")
+    
+    explanation.slider(
+        "How informative is the explanation?", 0, 5, 1,
+        key="14"
+        )
+    explanation.slider(
+        "How useful is the explanation to interpret the visualization?", 0, 5, 1,
+        key="15"
         )
 
     questions = st.container(height=400)
     questions.markdown('#### Questions')
     questions.write("""
                 Other instructions to generate other data visualizations, based on the generated one, could be
-
                 * What is the average age of pilots in different positions?
                     """)
-    value_questions = questions.slider(
-        "Score the queries", 0, 5, 1,
-       )
+    questions.slider(
+        "How informative are the questions?", 0, 5, 1,
+        key="16"
+        )
+    
+    questions.slider(
+        "How useful are the questions to interpret the visualization", 0, 5, 1,
+        key="17"
+        )
     
     narrarives = st.container(height=200)
     narrarives.markdown('#### Narratives importance')
     narrarives_importance = narrarives.slider(
         "How much have the three narratives helped you interpret the visualization?", 0, 5, 1,
-        )
-    # st.radio(
-    #     "Score the answer",
-    #     radio_options, 
-    #     captions = radio_captions, 
-    #     key="3")
+        key="19"
+       )
+
 
 st.write("## Before to proceed, please fillout this form:")
 
@@ -270,12 +287,12 @@ text_experties = st.text_input(
     )
 
 da_skills = st.slider(
-            "Score from 1(non-expert) to 5(expert) what are your skills in data analysis", 0, 5, 1
+            "Provide your experties in data analysis in a scale from 1 to 5, where 1=non-expert to 5=expert", 0, 5, 1
             )
 
 
 dv_skills = st.slider(
-            "Score from 1(non-expert) to 5(expert) what are your skills in data visualization", 0, 5, 1,
+            "Provide your experties in data visualization in a scale from 1 to 5, where 1=non-expert to 5=expert", 0, 5, 1,
             )
 
 if st.button("Start evaluating", type="primary"):
