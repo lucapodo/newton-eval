@@ -22,7 +22,7 @@ df_dataset = pd.DataFrame(dataset.data)
 evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
 df_evaluations = pd.DataFrame(evaluations.data)
 
-
+@st.cache_data
 def init_data():
 
     if(len(df_evaluations)>0):
