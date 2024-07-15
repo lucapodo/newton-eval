@@ -16,14 +16,16 @@ st.set_page_config(
 eval_table = "evaluation"
 conn = st.connection("supabase",type=SupabaseConnection)
 
-dataset = conn.query("*", table="dataset" ,ttl="0").execute()
-df_dataset = pd.DataFrame(dataset.data)
 
-evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
-df_evaluations = pd.DataFrame(evaluations.data)
 
 @st.cache_data
 def init_data():
+
+    dataset = conn.query("*", table="dataset" ,ttl="0").execute()
+    df_dataset = pd.DataFrame(dataset.data)
+
+    evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
+    df_evaluations = pd.DataFrame(evaluations.data)
 
     if(len(df_evaluations)>0):
         df_joined = df_dataset.merge(
@@ -43,9 +45,9 @@ def init_data():
         df_eval_newton_cot.reset_index(inplace=True)
     else:
         df_eval_newton_cot = df_dataset
-    return df_eval_newton_cot
+    return df_eval_newton_cot, df_dataset, df_evaluations
 
-df_eval_newton_cot = init_data()
+df_eval_newton_cot, df_dataset, df_evaluations = init_data()
 
 
 # df_eval_newton_cot.set_index('id_', inplace=True)
