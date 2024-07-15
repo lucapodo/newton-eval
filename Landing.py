@@ -13,16 +13,17 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-@st.cache_data
-def init_app():
-    eval_table = "evaluation"
-    conn = st.connection("supabase",type=SupabaseConnection)
+eval_table = "evaluation"
+conn = st.connection("supabase",type=SupabaseConnection)
 
-    dataset = conn.query("*", table="dataset" ,ttl="0").execute()
-    df_dataset = pd.DataFrame(dataset.data)
+dataset = conn.query("*", table="dataset" ,ttl="0").execute()
+df_dataset = pd.DataFrame(dataset.data)
 
-    evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
-    df_evaluations = pd.DataFrame(evaluations.data)
+evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
+df_evaluations = pd.DataFrame(evaluations.data)
+
+
+def init_data():
 
     if(len(df_evaluations)>0):
         df_joined = df_dataset.merge(
@@ -42,10 +43,11 @@ def init_app():
         df_eval_newton_cot.reset_index(inplace=True)
     else:
         df_eval_newton_cot = df_dataset
-    
     return df_eval_newton_cot
 
-df_eval_newton_cot = init_app()
+df_eval_newton_cot = init_data()
+
+
 # df_eval_newton_cot.set_index('id_', inplace=True)
 # df_eval_newton_cot.sort_index(inplace=True)
 # df_eval_newton_cot.reset_index(inplace=True)
