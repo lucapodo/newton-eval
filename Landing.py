@@ -13,35 +13,38 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-eval_table = "evaluation"
-conn = st.connection("supabase",type=SupabaseConnection)
+def init_app():
+    eval_table = "evaluation"
+    conn = st.connection("supabase",type=SupabaseConnection)
 
-dataset = conn.query("*", table="dataset" ,ttl="0").execute()
-df_dataset = pd.DataFrame(dataset.data)
+    dataset = conn.query("*", table="dataset" ,ttl="0").execute()
+    df_dataset = pd.DataFrame(dataset.data)
 
-evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
-df_evaluations = pd.DataFrame(evaluations.data)
+    evaluations = conn.query("*", table=eval_table ,ttl="0").execute()
+    df_evaluations = pd.DataFrame(evaluations.data)
 
-if(len(df_evaluations)>0):
-    df_joined = df_dataset.merge(
-        df_evaluations.groupby('index_vis').size().reset_index(name='num_evaluations'),
-        how='left',
-        left_on='id',
-        right_on='index_vis'
-    )
+    if(len(df_evaluations)>0):
+        df_joined = df_dataset.merge(
+            df_evaluations.groupby('index_vis').size().reset_index(name='num_evaluations'),
+            how='left',
+            left_on='id',
+            right_on='index_vis'
+        )
 
-    # Apply conditions
-    # df_eval_newton_cot = df_joined
-    #df_eval_newton_cot = df_joined[(df_joined['num_evaluations'] < 3) | (df_joined['num_evaluations'].isnull())]
+        # Apply conditions
+        # df_eval_newton_cot = df_joined
+        #df_eval_newton_cot = df_joined[(df_joined['num_evaluations'] < 3) | (df_joined['num_evaluations'].isnull())]
 
-    df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
-    df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
-    # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
-    df_eval_newton_cot.reset_index(inplace=True)
-else:
-    df_eval_newton_cot = df_dataset
+        df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
+        df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
+        # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
+        df_eval_newton_cot.reset_index(inplace=True)
+    else:
+        df_eval_newton_cot = df_dataset
+    
+    return df_eval_newton_cot
 
-
+df_eval_newton_cot = init_app()
 # df_eval_newton_cot.set_index('id_', inplace=True)
 # df_eval_newton_cot.sort_index(inplace=True)
 # df_eval_newton_cot.reset_index(inplace=True)
