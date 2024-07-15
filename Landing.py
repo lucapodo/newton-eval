@@ -13,6 +13,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+@st.cache_data
 def init_app():
     eval_table = "evaluation"
     conn = st.connection("supabase",type=SupabaseConnection)
