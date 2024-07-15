@@ -50,39 +50,45 @@ tmp = pd.DataFrame(answers.data)
 st.info('The system will prompt you the first question twice. Don\' worry keep the same score and push again on next!', icon="ℹ️")
 
 @st.cache_data
-def init_data():
-
-    if 'df' not in st.session_state:
-
-        if(len(tmp)>0):
-            df_joined = tmp_dataset.merge(
+def filter_data():
+    df_joined = tmp_dataset.merge(
                 tmp.groupby('index_vis').size().reset_index(name='num_evaluations'),
                 how='left',
                 left_on='id',
                 right_on='index_vis'
             )
-            
-            df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
-            df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
-            # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
-            
-            # # df_eval_newton_cot = df_eval_newton_cot.sort_values(by='num_evaluations')
-            # df_eval_newton_cot.set_index('id_', inplace=True)
-            # df_eval_newton_cot.sort_index(inplace=True)
-            # df_eval_newton_cot.reset_index(inplace=True)
-            df_eval_newton_cot.reset_index(inplace=True)
-            st.session_state.df = df_eval_newton_cot
-        else:
-            df_eval_newton_cot = tmp_dataset
+    return df_joined
 
-        index = 0
-        radio_index = None
-        return df_eval_newton_cot
 
+
+
+if 'df' not in st.session_state:
+
+    if(len(tmp)>0):
+        
+        df_joined = filter_data()
+        df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
+        st.write(df_joined.sort_values(by='num_evaluations'))
+        df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
+        # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
+        
+        # # df_eval_newton_cot = df_eval_newton_cot.sort_values(by='num_evaluations')
+        # df_eval_newton_cot.set_index('id_', inplace=True)
+        # df_eval_newton_cot.sort_index(inplace=True)
+        # df_eval_newton_cot.reset_index(inplace=True)
+        df_eval_newton_cot.reset_index(inplace=True)
+        st.session_state.df = df_eval_newton_cot
     else:
-        df_eval_newton_cot = st.session_state.df
+        df_eval_newton_cot = tmp_dataset
+
+    index = 0
+    radio_index = None
+    # return df_eval_newton_cot
+
+else:
+    df_eval_newton_cot = st.session_state.df
     
-    return df_eval_newton_cot
+    # return df_eval_newton_cot
 
     # df_eval_newton_cot.set_index('id_', inplace=True)
 
@@ -90,9 +96,10 @@ def init_data():
     #     st.dataframe(df_eval_newton_cot)
 
 # df_eval_newton_cot = df_eval_newton_cot.sample(frac=1)
-# st.dataframe(df_eval_newton_cot)
 
-df_eval_newton_cot = init_data()
+
+# df_eval_newton_cot = init_data()
+st.dataframe(df_eval_newton_cot)
 
 if 'index' not in st.session_state:
     st.session_state.index = 0
