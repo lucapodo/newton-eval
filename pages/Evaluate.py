@@ -387,7 +387,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 "u_caption":u_caption, "u_explanation":u_explanation, "u_questions":u_questions}
 
 
-    if(st.session_state.index < 60):
+    if(st.session_state.index < 21):
         
         with st.form("my_form"):
             
