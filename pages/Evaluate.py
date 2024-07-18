@@ -70,7 +70,7 @@ if 'df' not in st.session_state:
         df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
         st.write(df_joined.sort_values(by='num_evaluations'))
         df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
-        # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
+        df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
         
         # # df_eval_newton_cot = df_eval_newton_cot.sort_values(by='num_evaluations')
         # df_eval_newton_cot.set_index('id_', inplace=True)
@@ -99,7 +99,7 @@ else:
 
 
 # df_eval_newton_cot = init_data()
-# st.dataframe(df_eval_newton_cot)
+st.dataframe(df_eval_newton_cot)
 
 if 'index' not in st.session_state:
     st.session_state.index = 0
@@ -215,7 +215,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
     
     explanation_vrecs = explanation_vrecs.split('Step 3.')[0]
     questions_vrecs = pred.split('Step 3.')[1].replace("Insights suggestions:", 'Other instructions to generate other data visualizations, based on the generated one, could include:')
-    st.write('Labeled', st.session_state.index+1, 'out of 20')
+    st.write('Labeled', st.session_state.index+1, 'out of 10')
 
     def vrecs_content():
         st.write('## Response')
@@ -269,7 +269,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         )
     
         u_explanation = explanation.slider(
-            "How useful is the caption to interpret the visualization?", 0, 5, 1,
+            "How useful is the explanation to interpret the visualization?", 0, 5, 1,
             key="u_explanation_vrecs"
         )
         
@@ -352,7 +352,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
         )
     
         u_explanation = explanation.slider(
-            "How useful is the caption to interpret the visualization?", 0, 5, 1,
+            "How useful is the explanation to interpret the visualization?", 0, 5, 1,
             key="u_explanation_gpt"
         )
         
@@ -387,7 +387,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 "u_caption":u_caption, "u_explanation":u_explanation, "u_questions":u_questions}
 
 
-    if(st.session_state.index < 21):
+    if(st.session_state.index < 11):
         
         with st.form("my_form"):
             
@@ -404,7 +404,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets/custom_2.csv'),  sep=";", encoding='Latin-1', on_bad_lines='skip')
                 df_data = df_data.rename(columns=lambda x: x.lower())
             else:
-                df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets', df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'), index_col=0)
+                df_data = pd.read_csv(os.path.join('https://nvbenchdatasets.s3.eu-north-1.amazonaws.com/datasets', df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip() + '.csv'), index_col=0, encoding='utf-8')
                 df_data = df_data.rename(columns=lambda x: x.lower())
             
             st.dataframe(df_data.head(1))
@@ -439,6 +439,7 @@ if(st.session_state.index < len(df_eval_newton_cot)):
                 # st.write(df_eval_newton_cot.at[st.session_state.index, 'nvBench_id'].strip())
 
                 if(not st.session_state.start):
+                    
                     if(not debug):
                         conn.table(eval_table).insert(
                             [{

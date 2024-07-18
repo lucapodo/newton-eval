@@ -41,13 +41,13 @@ def init_data():
 
         df_joined['num_evaluations'] = df_joined['num_evaluations'].replace(np.nan, 0)
         df_eval_newton_cot = df_joined.sort_values(by='num_evaluations')
-        # df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
+        df_eval_newton_cot = df_eval_newton_cot[(df_eval_newton_cot['num_evaluations'] < 3) | (df_eval_newton_cot['num_evaluations'].isnull())]
         df_eval_newton_cot.reset_index(inplace=True)
     else:
         df_eval_newton_cot = df_dataset
     return df_eval_newton_cot, df_dataset, df_evaluations
 
-df_eval_newton_cot, df_dataset, df_evaluations = init_data()
+df_eval_newton_cot, df_dataset,  df_evaluations= init_data()
 
 
 # df_eval_newton_cot.set_index('id_', inplace=True)
