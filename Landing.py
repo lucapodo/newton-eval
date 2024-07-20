@@ -303,17 +303,31 @@ if st.button("Start evaluating", type="primary"):
     # st.write(text_gender)
     # st.write(text_age)
     # st.write(text_experties)
-    st.write(da_skills)
+    # st.write(da_skills)
+    send = True
 
-    conn.table("population").insert(
-        [{"experties": text_experties, 
-        'age':  text_age, 
-        'gender': text_gender, 
-        'user_id': str(st.session_state.user),
-        'da_skills': da_skills, 
-        'dv_skills': dv_skills, 
-        }], count="None"
-    ).execute()
+    if(text_gender == ""):
+        st.write('plase provide gender')
+        send = False
+    
+    if(text_age == ""):
+        st.write('plase provide age')
+        send = False
+    
+    if(text_experties == ""):
+        st.write('plase provide expertise')
+        send = False
 
-    switch_page("Evaluate")
+    if(send ):
+        conn.table("population").insert(
+            [{"experties": text_experties, 
+            'age':  text_age, 
+            'gender': text_gender, 
+            'user_id': str(st.session_state.user),
+            'da_skills': da_skills, 
+            'dv_skills': dv_skills, 
+            }], count="None"
+        ).execute()
+
+        switch_page("Evaluate")
 
